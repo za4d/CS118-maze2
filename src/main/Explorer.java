@@ -1,6 +1,7 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
+
 public class Explorer implements IRobotController {
     // the robot in the maze
     private IRobot robot;
@@ -10,7 +11,7 @@ public class Explorer implements IRobotController {
     // between moves
     private int delay;
 
-    private static final int[] allDirections = {IRobot.AHEAD, IRobot.BEHIND, IRobot.LEFT, IRobot.RIGHT};
+    private static final int[] allDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND}; // BEHIND Last so its only checked in the worst case
     private static final int[] forwardDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
 
 
@@ -51,8 +52,13 @@ public class Explorer implements IRobotController {
         }
     }
 
-    // What to do when number of surrounding walls is 1
-    // Assumes there only 1 non wall (its a dead end) and returns the direction that exit
+
+    /* DEADEND: number of Exits = 1 (back the way you came)
+    e.g.    #   #
+            # V #
+            # # #
+
+    Assumes there only 1 non wall (its a dead end) and returns the direction that exit. */
     public int deadEnd() {
         for (int dir : this.allDirections) {
             if (robot.look(dir) != IRobot.WALL) return dir;
@@ -60,9 +66,14 @@ public class Explorer implements IRobotController {
          return -1;
     }
 
-    // What to do when number of surrounding walls is 2
-    // There 2 exit and 1 is BEHIND you (which you shouldnt take),
-    // therefore search the remaining 3 directions for an exit
+
+    /* CORRIDOR: number of Exits is 2
+    e.g.    #   #
+              V #
+            # # #
+
+    There 2 exit and 1 is BEHIND you (which you shouldnt take),
+    therefore we search the remaining 3 directions for the exit that isnt backtracking. */
     public int corridor() {
         for (int dir : this.forwardDirections) {
             if (robot.look(dir) != IRobot.WALL) return dir;
@@ -70,15 +81,45 @@ public class Explorer implements IRobotController {
          return -1;
     }
 
-    // What to do when number of surrounding walls is 3
+
+    /* JUNCTION: number of Exits is 3
+    e.g.    #   #
+              V  
+            # # #
+
+    First we look for a route that we havent taken before,
+    Else if there isnt any we randomly choose from the others.*/
     public int junction() {
-        return 3;
+        // Look around for any unexplored corridors
+        for (int dir : this.allDirections) {
+            if (robot.look(dir) == IRobot.PASSAGE) return dir;
+        }
+
+        // If all exits have been searched before,
+        // make a randomies array of directions (which arn't backwards)...
+        int[] direction = randRotate(this.forwardDirections);
+
+        // ... and choose a direction that isnt a wall
+        for (int dir : this.allDirections) {
+            if (robot.look(dir) != IRobot.WALL) return dir;
+        }
+
+         return -1;
     }
 
-    // What to do when number of surrounding walls is 4
+
+    /* CROSSROADS: number of Exits is 4
+    e.g.    #   #
+              V
+            #   #
+
+    */
     public int crossroads() {
         return 4;
     }
+
+
+
     // returns a number indicating how many non-wall exits there
     // are surrounding the robot's current position
     public int nonwallExits() {
@@ -126,6 +167,18 @@ public class Explorer implements IRobotController {
         this.robot = robot;
     }
 
+
+    // returns and array which has been ROTATED a random number of times
+    private static int[] randRotate(int[] array) {
+        int[] rotatedArray = new int[array.length]; // Rotated array
+
+        int r = (int)( Math.random() * array.length ); // random postion rotated array will start from
+
+        for (int i = 0; i < array.length; i++) {
+            rotatedArray[i] = array[(r + i) % array.length];
+        }
+        return rotatedArray;
+    }
 
 
 

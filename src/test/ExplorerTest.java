@@ -167,4 +167,43 @@ public class ExplorerTest {
         );
         this.maze.setCellType(3, 2, Maze.WALL);//reset to walls all around
     }
+
+    @Test(timeout=10000)
+    public void junctionTest() {
+        // Make robot face North
+        this.robot.setHeading(IRobot.NORTH);
+
+        // Add walls all around except behind
+        this.maze.setCellType(2, 1, Maze.WALL);//Add wall above
+        this.maze.setCellType(1, 2, Maze.WALL);//Add wall to left
+        this.maze.setCellType(3, 2, Maze.WALL);//Add wall to right
+
+
+        //Add PASSAGE NORTH
+        this.maze.setCellType(2, 1, Maze.PASSAGE);
+        assertTrue(
+        "Failed when passage AHEAD - "+this.controller.corridor(),
+        this.controller.corridor() == IRobot.AHEAD
+        );
+        this.maze.setCellType(2, 1, Maze.WALL);//reset to walls all around
+
+
+        //Add PASSAGE to WEST
+        this.maze.setCellType(1, 2, Maze.PASSAGE);
+        assertTrue(
+        "Failed when passage LEFT - "+this.controller.corridor(),
+        this.controller.corridor() == IRobot.LEFT
+        );
+        this.maze.setCellType(1, 2, Maze.WALL);//reset to walls all around
+
+
+        //Add PASSAGE to EAST
+        this.maze.setCellType(3, 2, Maze.PASSAGE);
+        assertTrue(
+        "Failed when passage RIGHT - "+this.controller.corridor(),
+        this.controller.corridor() == IRobot.RIGHT
+        );
+        this.maze.setCellType(3, 2, Maze.WALL);//reset to walls all around
+    }
+
 }
