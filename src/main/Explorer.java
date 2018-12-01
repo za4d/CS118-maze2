@@ -53,7 +53,11 @@ public class Explorer implements IRobotController {
 
     // What to do when number of surrounding walls is 1
     public int deadEnd() {
-        return 1;
+        for (int dir : this.directions) {
+            //Assumes there only 1 non wall (its a dead end) and returns the direction that exit
+            if (robot.look(dir) != IRobot.WALL) return dir;
+        }
+        // return -1;
     }
 
     // What to do when number of surrounding walls is 2
@@ -76,7 +80,7 @@ public class Explorer implements IRobotController {
         int exits = 4;
         // Direction.values() is an array of values Direction in the enumeration
         // Each direction is tested, and if its a wall the number of exits is decreased
-        for (Direction dir : Directions.values ) {
+        for (int dir : this.directions ) {
             if (robot.look(dir) == IRobot.WALL) exits--;
         }
         return exits;
@@ -120,20 +124,7 @@ public class Explorer implements IRobotController {
 
 
 
-    // ENUMS DECLARATIONS
-
-    public enum Direction {
-        AHEAD(IRobot.AHEAD), BEHIND(IRobot.BEHIND), LEFT(IRobot.LEFT), RIGHT(IRobot.RIGHT);
-
-        private final int dir;
-
-        Direction(int dir) {
-            this.dir = dir;
-        }
-
-        public int look() {
-            this.v
-        }
-
-    }
+    // // ENUMS DECLARATIONS
+    //
+    // public void look
 }
