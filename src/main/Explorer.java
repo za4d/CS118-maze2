@@ -76,7 +76,7 @@ public class Explorer implements IRobotController {
         int exits = 4;
         // Direction.values() is an array of values Direction in the enumeration
         // Each direction is tested, and if its a wall the number of exits is decreased
-        for (int dir : this.directions ) {
+        for (Direction dir : Directions.values ) {
             if (robot.look(dir) == IRobot.WALL) exits--;
         }
         return exits;
@@ -120,20 +120,20 @@ public class Explorer implements IRobotController {
 
 
 
-//     // ENUMS DECLARATIONS
-//
-//     public enum Direction {
-//         AHEAD(IRobot.AHEAD), BEHIND(IRobot.BEHIND), LEFT(IRobot.LEFT), RIGHT(IRobot.RIGHT);
-//
-//         private final int dir;
-//
-//         Direction(int dir) {
-//             this.dir = dir;
-//         }
-//
-//         public int look() {
-//             this.v
-//         }
-//
-//     }
+    // ENUMS DECLARATIONS
+
+    public enum Direction {
+        AHEAD(IRobot.AHEAD), BEHIND(IRobot.BEHIND), LEFT(IRobot.LEFT), RIGHT(IRobot.RIGHT);
+
+        private final int dir;
+
+        Direction(int dir) {
+            this.dir = dir;
+        }
+
+        public int look() {
+            this.v
+        }
+
+    }
 }
