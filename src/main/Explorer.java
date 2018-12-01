@@ -52,18 +52,23 @@ public class Explorer implements IRobotController {
     }
 
     // What to do when number of surrounding walls is 1
+    // Assumes there only 1 non wall (its a dead end) and returns the direction that exit
     public int deadEnd() {
-
         for (int dir : this.directions) {
-            //Assumes there only 1 non wall (its a dead end) and returns the direction that exit
+
             if (robot.look(dir) != IRobot.WALL) return dir;
         }
          return -1;
     }
 
     // What to do when number of surrounding walls is 2
+    // There 2 exit and 1 is BEHIND you (which you shouldnt take),
+    // therefore search the remaining 3 directions for an exit
     public int corridor() {
-        return 2;
+        for (int dir : {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT}) {
+            if (robot.look(dir) != IRobot.WALL) return dir;
+        }
+         return -1;
     }
 
     // What to do when number of surrounding walls is 3
