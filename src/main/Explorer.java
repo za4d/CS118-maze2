@@ -19,7 +19,7 @@ public class Explorer implements IRobotController {
     public void start() {
         this.active = true;
         int exits;
-        int direction;
+        int direction = -1;
 
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
             // wait for a while if we are supposed to
@@ -43,8 +43,8 @@ public class Explorer implements IRobotController {
                     break;
             }
 
-            robot.face(direction)
-            robot.advance()
+            robot.face(direction);
+            robot.advance();
 
             if (delay > 0)
             robot.sleep(delay);
@@ -53,11 +53,12 @@ public class Explorer implements IRobotController {
 
     // What to do when number of surrounding walls is 1
     public int deadEnd() {
+
         for (int dir : this.directions) {
             //Assumes there only 1 non wall (its a dead end) and returns the direction that exit
             if (robot.look(dir) != IRobot.WALL) return dir;
         }
-        // return -1;
+         return -1;
     }
 
     // What to do when number of surrounding walls is 2

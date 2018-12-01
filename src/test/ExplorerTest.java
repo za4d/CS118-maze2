@@ -54,29 +54,78 @@ public class ExplorerTest {
 
     @Test(timeout=10000)
     public void nonwallExitsTest() {
-        //Add wall above
+
+        //Add WALL NORTH
         this.maze.setCellType(2, 1, Maze.WALL);
         assertTrue(
-        "Failed when Wall added ABOVE - Exits = "+this.controller.nonwallExits(),
+        "Failed when Wall added AHEAD - Exits = "+this.controller.nonwallExits(),
         this.controller.nonwallExits() == 3);
 
-        //Add wall below
+        //Add WALL SOUTH
         this.maze.setCellType(2, 3, Maze.WALL);
         assertTrue(
-        "Failed when Wall added ABOVE,BELOW - Exits = "+this.controller.nonwallExits(),
+        "Failed when Wall added AHEAD,BEHIND - Exits = "+this.controller.nonwallExits(),
         this.controller.nonwallExits() == 2);
 
-        //Add wall to left
+        //Add WALL to EAST
         this.maze.setCellType(1, 2, Maze.WALL);
         assertTrue(
-        "Failed when Wall added ABOVE,BELOW,LEFT - Exits = "+this.controller.nonwallExits(),
+        "Failed when Wall added AHEAD,BEHIND,LEFT - Exits = "+this.controller.nonwallExits(),
         this.controller.nonwallExits() == 1);
 
-        //Add wall to right
+        //Add WALL to WEST
         this.maze.setCellType(3, 2, Maze.WALL);
         assertTrue(
-        "Failed when Wall added ABOVE,BELOW,LEFT,RIGHT - Exits = "+this.controller.nonwallExits(),
+        "Failed when Wall added AHEAD,BEHIND,LEFT,RIGHT - Exits = "+this.controller.nonwallExits(),
         this.controller.nonwallExits() == 0);
     }
 
+
+    @Test(timeout=10000)
+    public void deadEndTest() {
+        // Make robot face North
+        this.robot.setHeading(IRobot.NORTH);
+
+        // Add walls all around
+        this.maze.setCellType(2, 1, Maze.WALL);//Add wall above
+        this.maze.setCellType(2, 3, Maze.WALL);//Add wall below
+        this.maze.setCellType(1, 2, Maze.WALL);//Add wall to left
+        this.maze.setCellType(3, 2, Maze.WALL);//Add wall to right
+
+
+        //Add PASSAGE NORTH
+        this.maze.setCellType(2, 1, Maze.PASSAGE);
+        assertTrue(
+        "Failed when passage AHEAD - "+this.controller.deadEnd(),
+        this.controller.deadEnd() == IRobot.AHEAD
+        );
+        this.maze.setCellType(2, 1, Maze.WALL);//reset to walls all around
+
+
+        //Add PASSAGE SOUTH
+        this.maze.setCellType(2, 3, Maze.PASSAGE);
+        assertTrue(
+        "Failed when passage BEHIND - "+this.controller.deadEnd(),
+        this.controller.deadEnd() == IRobot.BEHIND
+        );
+        this.maze.setCellType(2, 3, Maze.WALL);//reset to walls all around
+
+
+        //Add PASSAGE to WEST
+        this.maze.setCellType(1, 2, Maze.PASSAGE);
+        assertTrue(
+        "Failed when passage LEFT - "+this.controller.deadEnd(),
+        this.controller.deadEnd() == IRobot.LEFT
+        );
+        this.maze.setCellType(1, 2, Maze.WALL);//reset to walls all around
+
+
+        //Add PASSAGE to EAST
+        this.maze.setCellType(3, 2, Maze.PASSAGE);
+        assertTrue(
+        "Failed when passage RIGHT - "+this.controller.deadEnd(),
+        this.controller.deadEnd() == IRobot.RIGHT
+        );
+        this.maze.setCellType(3, 2, Maze.WALL);//reset to walls all around
+    }
 }

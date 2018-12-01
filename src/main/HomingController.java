@@ -14,7 +14,6 @@ public class HomingController implements IRobotController {
     // EXPLANATION: this method is called when the "start" button is clicked in the user interface
     public void start() {
         this.active = true;
-
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
               // wait for a while if we are supposed to
               if (delay > 0)

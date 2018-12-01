@@ -1,18 +1,18 @@
 ## CONTANTS
 
 # Direction Integers
-- IRobot.NORTH
-- IRobot.EAST
-- IRobot.SOUTH
-- IRobot.WEST
+- IRobot.NORTH [1000]
+- IRobot.EAST [1001]
+- IRobot.SOUTH [1002]
+- IRobot.WEST [1003]
 
 NORTH+1=EAST, EAST+1=SOUTH, SOUTH+1=WEST
 
 # Relative Direction (r_direction) Integers
-- IRobot.LEFT
-- IRobot.RIGHT
-- IRobot.AHEAD
-- IRobot.BEHIND
+- IRobot.AHEAD [2000]
+- IRobot.RIGHT [2001]
+- IRobot.BEHIND [2002]
+- IRobot.LEFT [2003]
 - IRobot.CENTRE ~ Do Nothing
 
 Same addition rule from above applies
@@ -27,7 +27,7 @@ Same addition rule from above applies
 *robot.look(r_direction)* ~ Returns wall type in given r_Direction
 
 *robot.getHeading()* ~ Returns robots Direction
-*robot setHeading(direction)* ~ Makes robot face N/E/S/W
+*robot.setHeading(direction)* ~ Makes robot face N/E/S/W
 
 *robot.getLocation()* ~ Returns object of point type with members x and y
 *robot.getTargetLocation()* ~ Same as above but for the target
