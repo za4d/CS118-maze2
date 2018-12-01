@@ -81,10 +81,10 @@ public class Explorer implements IRobotController {
          return -1;
     }
 
-
+    // TODO: Test JUNCTION
     /* JUNCTION: number of Exits is 3
     e.g.    #   #
-              V  
+              V
             # # #
 
     First we look for a route that we havent taken before,

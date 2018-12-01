@@ -56,25 +56,25 @@ public class ExplorerTest {
     public void nonwallExitsTest() {
 
         //Add WALL NORTH
-        this.maze.setCellType(2, 1, Maze.WALL);
+        setNorth(Maze.WALL);
         assertTrue(
         "Failed when Wall added AHEAD - Exits = "+this.controller.nonwallExits(),
         this.controller.nonwallExits() == 3);
 
         //Add WALL SOUTH
-        this.maze.setCellType(2, 3, Maze.WALL);
+        setSouth(Maze.WALL);
         assertTrue(
         "Failed when Wall added AHEAD,BEHIND - Exits = "+this.controller.nonwallExits(),
         this.controller.nonwallExits() == 2);
 
-        //Add WALL to EAST
-        this.maze.setCellType(1, 2, Maze.WALL);
+        //Add WALL to WEST
+        setWest(Maze.WALL);
         assertTrue(
         "Failed when Wall added AHEAD,BEHIND,LEFT - Exits = "+this.controller.nonwallExits(),
         this.controller.nonwallExits() == 1);
 
-        //Add WALL to WEST
-        this.maze.setCellType(3, 2, Maze.WALL);
+        //Add WALL to EAST
+        setEast(Maze.WALL);
         assertTrue(
         "Failed when Wall added AHEAD,BEHIND,LEFT,RIGHT - Exits = "+this.controller.nonwallExits(),
         this.controller.nonwallExits() == 0);
@@ -87,46 +87,46 @@ public class ExplorerTest {
         this.robot.setHeading(IRobot.NORTH);
 
         // Add walls all around
-        this.maze.setCellType(2, 1, Maze.WALL);//Add wall above
-        this.maze.setCellType(2, 3, Maze.WALL);//Add wall below
-        this.maze.setCellType(1, 2, Maze.WALL);//Add wall to left
-        this.maze.setCellType(3, 2, Maze.WALL);//Add wall to right
+        setNorth(Maze.WALL);//Add wall above
+        setSouth(Maze.WALL);//Add wall below
+        setWest(Maze.WALL);//Add wall to left
+        setEast(Maze.WALL);//Add wall to right
 
 
         //Add PASSAGE NORTH
-        this.maze.setCellType(2, 1, Maze.PASSAGE);
+        setNorth(Maze.PASSAGE);
         assertTrue(
         "Failed when passage AHEAD - "+this.controller.deadEnd(),
         this.controller.deadEnd() == IRobot.AHEAD
         );
-        this.maze.setCellType(2, 1, Maze.WALL);//reset to walls all around
+        setNorth(Maze.WALL);//reset to walls all around
 
 
         //Add PASSAGE SOUTH
-        this.maze.setCellType(2, 3, Maze.PASSAGE);
+        setSouth(Maze.PASSAGE);
         assertTrue(
         "Failed when passage BEHIND - "+this.controller.deadEnd(),
         this.controller.deadEnd() == IRobot.BEHIND
         );
-        this.maze.setCellType(2, 3, Maze.WALL);//reset to walls all around
+        setSouth(Maze.WALL);//reset to walls all around
 
 
         //Add PASSAGE to WEST
-        this.maze.setCellType(1, 2, Maze.PASSAGE);
+        setWest(Maze.PASSAGE);
         assertTrue(
         "Failed when passage LEFT - "+this.controller.deadEnd(),
         this.controller.deadEnd() == IRobot.LEFT
         );
-        this.maze.setCellType(1, 2, Maze.WALL);//reset to walls all around
+        setWest(Maze.WALL);//reset to walls all around
 
 
         //Add PASSAGE to EAST
-        this.maze.setCellType(3, 2, Maze.PASSAGE);
+        setEast(Maze.PASSAGE);
         assertTrue(
         "Failed when passage RIGHT - "+this.controller.deadEnd(),
         this.controller.deadEnd() == IRobot.RIGHT
         );
-        this.maze.setCellType(3, 2, Maze.WALL);//reset to walls all around
+        setEast(Maze.WALL);//reset to walls all around
     }
 
 
@@ -136,74 +136,111 @@ public class ExplorerTest {
         this.robot.setHeading(IRobot.NORTH);
 
         // Add walls all around except behind
-        this.maze.setCellType(2, 1, Maze.WALL);//Add wall above
-        this.maze.setCellType(1, 2, Maze.WALL);//Add wall to left
-        this.maze.setCellType(3, 2, Maze.WALL);//Add wall to right
+        setNorth(Maze.WALL);//Add wall above
+        setWest(Maze.WALL);//Add wall to left
+        setEast(Maze.WALL);//Add wall to right
 
 
         //Add PASSAGE NORTH
-        this.maze.setCellType(2, 1, Maze.PASSAGE);
+        setNorth(Maze.PASSAGE);
         assertTrue(
         "Failed when passage AHEAD - "+this.controller.corridor(),
         this.controller.corridor() == IRobot.AHEAD
         );
-        this.maze.setCellType(2, 1, Maze.WALL);//reset to walls all around
+        setNorth(Maze.WALL);//reset to walls all around
 
 
         //Add PASSAGE to WEST
-        this.maze.setCellType(1, 2, Maze.PASSAGE);
+        setWest(Maze.PASSAGE);
         assertTrue(
         "Failed when passage LEFT - "+this.controller.corridor(),
         this.controller.corridor() == IRobot.LEFT
         );
-        this.maze.setCellType(1, 2, Maze.WALL);//reset to walls all around
+        setWest(Maze.WALL);//reset to walls all around
 
 
         //Add PASSAGE to EAST
-        this.maze.setCellType(3, 2, Maze.PASSAGE);
+        setEast(Maze.PASSAGE);
         assertTrue(
         "Failed when passage RIGHT - "+this.controller.corridor(),
         this.controller.corridor() == IRobot.RIGHT
         );
-        this.maze.setCellType(3, 2, Maze.WALL);//reset to walls all around
+        setEast(Maze.WALL);//reset to walls all around
     }
-
-    @Test(timeout=10000)
+/*
+    @Test(timeout=15000)
     public void junctionTest() {
         // Make robot face North
         this.robot.setHeading(IRobot.NORTH);
 
         // Add walls all around except behind
-        this.maze.setCellType(2, 1, Maze.WALL);//Add wall above
-        this.maze.setCellType(1, 2, Maze.WALL);//Add wall to left
-        this.maze.setCellType(3, 2, Maze.WALL);//Add wall to right
+        setNorth(Maze.WALL);//Add wall above
+        setSouth(Maze.BEENBEFORE);//Add wall below
+        setWest(Maze.BEENBEFORE);//Add wall to left
+        setEast(Maze.BEENBEFORE);//Add wall to right
 
 
-        //Add PASSAGE NORTH
-        this.maze.setCellType(2, 1, Maze.PASSAGE);
+        // SINGLE UNEXPLORED
+
+        //PASSAGE to WEST
+        setWest(Maze.PASSAGE);
         assertTrue(
-        "Failed when passage AHEAD - "+this.controller.corridor(),
-        this.controller.corridor() == IRobot.AHEAD
+        "Failed when 1 Unexplored passage LEFT - "+this.controller.corridor(),
+        this.controller.junction() == IRobot.LEFT
         );
-        this.maze.setCellType(2, 1, Maze.WALL);//reset to walls all around
+        setWest(Maze.WALL);//reset to walls all around
 
 
-        //Add PASSAGE to WEST
-        this.maze.setCellType(1, 2, Maze.PASSAGE);
+        //PASSAGE to EAST
+        setEast(Maze.PASSAGE);
         assertTrue(
-        "Failed when passage LEFT - "+this.controller.corridor(),
-        this.controller.corridor() == IRobot.LEFT
+        "Failed when 1 Unexplored passage RIGHT - "+this.controller.corridor(),
+        this.controller.junction() == IRobot.RIGHT
         );
-        this.maze.setCellType(1, 2, Maze.WALL);//reset to walls all around
+        setEast(Maze.WALL);//reset to walls all around
 
-
-        //Add PASSAGE to EAST
-        this.maze.setCellType(3, 2, Maze.PASSAGE);
+        //PASSAGE to SOUTH
+        setEast(Maze.PASSAGE);
         assertTrue(
-        "Failed when passage RIGHT - "+this.controller.corridor(),
-        this.controller.corridor() == IRobot.RIGHT
+        "Failed when 1 Unexplored passage BEHIND - "+this.controller.corridor(),
+        this.controller.junction() == IRobot.BEHIND
         );
-        this.maze.setCellType(3, 2, Maze.WALL);//reset to walls all around
+        setSouth(Maze.PASSAGE);//reset to walls all around
+
+        // ALL EXPLORED
+
+        //PASSAGE to WEST
+        int dir = 0;
+        while (dir != IRobot.LEFT) {
+            dir = this.controller.junction();
+            assertFalse(
+            "Failed when All Unexplored, chose passage BEHIND ",
+            dir == IRobot.BEHIND
+            );
+        }
+        //PASSAGE to EAST
+        while (dir != IRobot.RIGHT) {
+            dir = this.controller.junction();
+            assertFalse(
+            "Failed when All Unexplored, chose passage BEHIND ",
+            this.controller.junction() == IRobot.BEHIND
+            );
+        }
+    }
+*/
+
+
+    private void setNorth(int wallType) {
+        this.maze.setCellType(2, 1, wallType);
+    }
+    private void setSouth(int wallType) {
+        this.maze.setCellType(2, 3, wallType);
+    }
+    private void setEast(int wallType) {
+        this.maze.setCellType(3, 2, wallType);
+    }
+    private void setWest(int wallType) {
+        this.maze.setCellType(1, 2, wallType);
     }
 
 }
