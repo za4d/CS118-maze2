@@ -10,8 +10,8 @@ public class Explorer implements IRobotController {
     // between moves
     private int delay;
 
-    private static final int[] directions = {IRobot.AHEAD, IRobot.BEHIND, IRobot.LEFT, IRobot.RIGHT};
-
+    private static final int[] allDirections = {IRobot.AHEAD, IRobot.BEHIND, IRobot.LEFT, IRobot.RIGHT};
+    private static final int[] forwardDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
 
 
     // this method is called when the "start" button is clicked
@@ -54,8 +54,7 @@ public class Explorer implements IRobotController {
     // What to do when number of surrounding walls is 1
     // Assumes there only 1 non wall (its a dead end) and returns the direction that exit
     public int deadEnd() {
-        for (int dir : this.directions) {
-
+        for (int dir : this.allDirections) {
             if (robot.look(dir) != IRobot.WALL) return dir;
         }
          return -1;
@@ -65,7 +64,7 @@ public class Explorer implements IRobotController {
     // There 2 exit and 1 is BEHIND you (which you shouldnt take),
     // therefore search the remaining 3 directions for an exit
     public int corridor() {
-        for (int dir : {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT}) {
+        for (int dir : this.forwardDirections) {
             if (robot.look(dir) != IRobot.WALL) return dir;
         }
          return -1;
@@ -86,7 +85,7 @@ public class Explorer implements IRobotController {
         int exits = 4;
         // Direction.values() is an array of values Direction in the enumeration
         // Each direction is tested, and if its a wall the number of exits is decreased
-        for (int dir : this.directions ) {
+        for (int dir : this.allDirections ) {
             if (robot.look(dir) == IRobot.WALL) exits--;
         }
         return exits;
