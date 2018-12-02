@@ -1,7 +1,7 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
-
+//TODO:: BEAUTIFY!!
 public class Explorer implements IRobotController {
     // the robot in the maze
     private IRobot robot;
@@ -38,6 +38,9 @@ public class Explorer implements IRobotController {
         int exits;
         int direction = -1;
 
+//TODO: remove Info
+// Info.all();
+
 
         //Reset Junction Array and Counter to 0 for new junctions
         if (robot.getRuns() == 0) {
@@ -65,28 +68,25 @@ public class Explorer implements IRobotController {
                     direction = corridor();
                     break;
                 case 3:
-                    direction = junction();
-                    break;
                 case 4:
-                    direction = crossroads();
+                    direction = junction();
+                    // If robot is at a junction or corridor,
+                    // search robotData for the junction
+                    if (robotData.findJunction(robot.getLocation()) == -1)
+                    robotData.addJunction(robot.getLocation(), robot.getHeading());// If junction not in data store, add it
+
+                    // Test if junctions are correctly recorded
+                    robotData.printJunction();
                     break;
             }
 
-            // If robot is at a junction or corridor
-            if(exits >= 3) {
-                // search data store for the junction
-                // if junction not in data store, add it
-                if (robotData.findJunction(robot.getLocation()) == -1)
-                    robotData.addJunction(robot.getLocation(), robot.getHeading());
-                    // Test if junctions are correctly recorded
-                    // robotData.printJunction();
-            }
 
             robot.face(direction);
             robot.advance();
 
+            //TODO: Reset Delay to normal
             if (delay > 0)
-            robot.sleep(delay);
+            robot.sleep(delay*2);
         }
     }
 
@@ -150,7 +150,7 @@ public class Explorer implements IRobotController {
          return -1;
     }
 
-    //TODO:: Combine junction and crossroads?
+    //TODO:: (COMBINE EXPLANATIONS)Combine junction and crossroads? 
     /* JUNCTION: number of Exits is 3
     e.g.    #   #
               V
@@ -158,31 +158,13 @@ public class Explorer implements IRobotController {
 
     First we look for a route that we havent taken before,
     Else if there isnt any we randomly choose from the others.*/
-    public int junction() {
-        // make a randomised array of directions (which arn't backwards)...
-        int[] directions = shuffleArray(this.forwardDirections);
-
-        // Look across array for any unexplored corridors
-        for (int dir : directions) {
-            if (robot.look(dir) == IRobot.PASSAGE) return dir;
-        }
-
-        // If all exits have been searched before,
-        // choose a direction that isnt a wall
-        for (int dir : directions) {
-            if (robot.look(dir) != IRobot.WALL) return dir;
-        }
-
-         return -1;
-    }
-
     /* CROSSROADS: number of Exits is 4
     e.g.    #   #
               V
             #   #
 
-    */
-    public int crossroads() {
+    Junction and Crossroad code are the same and therfore are combined*/
+    public int junction() {
         // make a randomised array of directions (which arn't backwards)...
         int[] directions = shuffleArray(this.forwardDirections);
 
@@ -299,13 +281,31 @@ class RobotData {
     //Prints juction i details to terminal
     public void printJunction(int i) {
         // print out Coordinates of a junction in the array
-        System.out.println("Junction "+i+" -- heading "+this.junctionList[i].arrivalHeading()+" -- "+this.junctionList[i].position.toString());
+        System.out.println("Junction "+i+" -- heading "+headingToString(this.junctionList[i].arrivalHeading())+" -- "+this.junctionList[i].position.toString());
     }
 
     public void printJunction() {
         //if no index specifed print most recent junction
         printJunction(this.juncCount-1);
     }
+
+    //Convert integer heading to string
+    public String headingToString(int dir) {
+        switch(dir) {
+            case 1000:
+                return "North";
+            case 1001:
+                return "East";
+            case 1002:
+                return "South";
+            case 1003:
+                return "West";
+            default:
+                return "INVALID";
+        }
+    }
+
+
 }
 
 
@@ -337,5 +337,6 @@ class Junction {
     public Point position() {
         return this.position;
     }
+
 
 }
