@@ -1,6 +1,6 @@
 ## CONTANTS
 
-# Direction Integers
+# Direction/Heading Integers
 - IRobot.NORTH [1000]
 - IRobot.EAST [1001]
 - IRobot.SOUTH [1002]

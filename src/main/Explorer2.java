@@ -4,7 +4,7 @@ import java.awt.Point;
 // TODO[ !!! ] LOOK around method to group all the loops in dead end corridor ...
 // TODO[ ? ] MAX number of steps
 // TODO: BEAUTIFY!!
-public class Explorer implements IRobotController {
+public class Explorer2 implements IRobotController {
     // the robot in the maze
     private IRobot robot;
     // a flag to indicate whether we are looking for a path

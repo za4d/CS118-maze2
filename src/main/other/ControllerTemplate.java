@@ -19,7 +19,7 @@ public class ControllerTemplate implements IRobotController {
         // loop while we haven't found the exit and the agent
         // has not been interrupted
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
-            // TODO: determine the direction of the robot
+            // ToDO:: determine the direction of the robot
 
             // move one step into the direction the robot is facing
             robot.advance();

@@ -37,7 +37,7 @@ public class RobotData {
     }
 
 
-    //TODO::(searches backwards as your more likely to cros a junction you recently found)
+    //TODO[ ! ] (searches backwards as your more likely to cros a junction you recently found)
     //Search junction list for matching position Point
     // Search robotData list for a matches position
     // Returns the Junction object of
@@ -60,7 +60,7 @@ public class RobotData {
     //Prints juction i details to terminal
     public void printJunction(int i) {
         // print out Coordinates of a junction in the array
-        System.out.println("Junction "+this.junctionList[i].getID()+" -- heading "+headingToString(this.junctionList[i].getArrivalHeading())+" -- "+this.junctionList[i].position.toString());
+        System.out.print("Junction "+this.junctionList[i].getID()+" -- heading "+headingToString(this.junctionList[i].getArrivalHeading())+" -- "+positionToString(this.junctionList[i].getPosition()));
     }
 
     public void printJunction() {
@@ -69,7 +69,7 @@ public class RobotData {
     }
 
     //Convert integer heading to string
-    public String headingToString(int dir) {
+    public static String headingToString(int dir) {
         switch(dir) {
             case IRobot.NORTH:
                 return "North";
@@ -80,9 +80,14 @@ public class RobotData {
             case IRobot.WEST:
                 return "West";
             default:
-                return "INVALID";
+                return "ERR";
         }
     }
 
-    
+    public static String positionToString(Point p) {
+        return "("+p.x+","+p.y+")";
+    }
+
+
+
 }

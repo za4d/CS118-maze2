@@ -1,9 +1,9 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
-// TODO:: Seperate Classes Seperate files?
+// TODO[ ! ] Seperate Classes Seperate files?
 
-//TODO:: Descibe how i recorded the juntions
+// TODO[ ! ] Descibe how i recorded the juntions
 
 //
 public class Junction {
@@ -28,7 +28,7 @@ public class Junction {
         this.arrivalHeading = IRobot.CENTRE;
     }
 
-    //TODO:: remove x y?
+    //TODO: remove x y?
     //Constructs a Junction given x adn y coordinates and Heading
     Junction(int x, int y, int arrivalHeading) {
         this.juncID = juncID;
@@ -41,7 +41,6 @@ public class Junction {
         return this.arrivalHeading;
     }
 
-    //TODO:: remove position getter?
     public Point getPosition() {
         return this.position;
     }
