@@ -90,23 +90,22 @@ public class Explorer implements IRobotController {
     First we look for a route that we havent taken before,
     Else if there isnt any we randomly choose from the others.*/
     public int junction() {
-        // Look around for any unexplored corridors
-        for (int dir : this.allDirections) {
+        // make a randomised array of directions (which arn't backwards)...
+        int[] directions = randRotate(this.forwardDirections);
+
+        // Look across array for any unexplored corridors
+        for (int dir : directions) {
             if (robot.look(dir) == IRobot.PASSAGE) return dir;
         }
 
         // If all exits have been searched before,
-        // make a randomies array of directions (which arn't backwards)...
-        int[] direction = randRotate(this.forwardDirections);
-
-        // ... and choose a direction that isnt a wall
-        for (int dir : this.allDirections) {
+        // choose a direction that isnt a wall
+        for (int dir : directions) {
             if (robot.look(dir) != IRobot.WALL) return dir;
         }
 
          return -1;
     }
-
 
     /* CROSSROADS: number of Exits is 4
     e.g.    #   #
@@ -115,7 +114,21 @@ public class Explorer implements IRobotController {
 
     */
     public int crossroads() {
-        return 4;
+        // make a randomised array of directions (which arn't backwards)...
+        int[] directions = randRotate(this.forwardDirections);
+
+        // Look around for any unexplored corridors
+        for (int dir : directions) {
+            if (robot.look(dir) == IRobot.PASSAGE) return dir;
+        }
+
+        // If all exits have been searched before,
+        // choose a random direction that isnt a wall
+        for (int dir : directions) {
+            if (robot.look(dir) != IRobot.WALL) return dir;
+        }
+
+         return -1;
     }
 
 

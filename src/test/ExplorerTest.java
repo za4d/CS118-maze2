@@ -50,6 +50,9 @@ public class ExplorerTest {
         // initialise the random robot controller
         this.controller = new Explorer();
         this.controller.setRobot(this.robot);
+
+        // Make robot face North
+        this.robot.setHeading(IRobot.NORTH);
     }
 
     @Test(timeout=10000)
@@ -83,8 +86,6 @@ public class ExplorerTest {
 
     @Test(timeout=10000)
     public void deadEndTest() {
-        // Make robot face North
-        this.robot.setHeading(IRobot.NORTH);
 
         // Add walls all around
         setNorth(Maze.WALL);//Add wall above
@@ -132,8 +133,6 @@ public class ExplorerTest {
 
     @Test(timeout=10000)
     public void corridorTest() {
-        // Make robot face North
-        this.robot.setHeading(IRobot.NORTH);
 
         // Add walls all around except behind
         setNorth(Maze.WALL);//Add wall above
@@ -167,17 +166,17 @@ public class ExplorerTest {
         );
         setEast(Maze.WALL);//reset to walls all around
     }
+
+    //JUNCTION and CROSSROADS tested with custom Maze
 /*
     @Test(timeout=15000)
     public void junctionTest() {
-        // Make robot face North
-        this.robot.setHeading(IRobot.NORTH);
 
         // Add walls all around except behind
         setNorth(Maze.WALL);//Add wall above
-        setSouth(Maze.BEENBEFORE);//Add wall below
-        setWest(Maze.BEENBEFORE);//Add wall to left
-        setEast(Maze.BEENBEFORE);//Add wall to right
+        setbeenbefore(IRobot.SOUTH);//Add wall below
+        setbeenbefore(IRobot.WEST);//Add wall to left
+        setbeenbefore(IRobot.EAST);//Add wall to right
 
 
         // SINGLE UNEXPLORED
@@ -185,27 +184,27 @@ public class ExplorerTest {
         //PASSAGE to WEST
         setWest(Maze.PASSAGE);
         assertTrue(
-        "Failed when 1 Unexplored passage LEFT - "+this.controller.corridor(),
+        "Failed when 1 Unexplored passage LEFT - "+this.controller.junction(),
         this.controller.junction() == IRobot.LEFT
         );
-        setWest(Maze.WALL);//reset to walls all around
+        setbeenbefore(IRobot.WEST);//reset to walls all around
 
 
         //PASSAGE to EAST
         setEast(Maze.PASSAGE);
         assertTrue(
-        "Failed when 1 Unexplored passage RIGHT - "+this.controller.corridor(),
+        "Failed when 1 Unexplored passage RIGHT - "+this.controller.junction(),
         this.controller.junction() == IRobot.RIGHT
         );
-        setEast(Maze.WALL);//reset to walls all around
+        setbeenbefore(IRobot.EAST);//reset to walls all around
 
         //PASSAGE to SOUTH
         setEast(Maze.PASSAGE);
         assertTrue(
-        "Failed when 1 Unexplored passage BEHIND - "+this.controller.corridor(),
+        "Failed when 1 Unexplored passage BEHIND - "+this.controller.junction(),
         this.controller.junction() == IRobot.BEHIND
         );
-        setSouth(Maze.PASSAGE);//reset to walls all around
+        setbeenbefore(IRobot.SOUTH);//reset to BEENBEFORE
 
         // ALL EXPLORED
 
@@ -227,7 +226,7 @@ public class ExplorerTest {
             );
         }
     }
-*/
+    */
 
 
     private void setNorth(int wallType) {
@@ -243,4 +242,14 @@ public class ExplorerTest {
         this.maze.setCellType(1, 2, wallType);
     }
 
+
+
+    // private void setbeenbefore(int dir) {
+    //     this.robot.setHeading(dir);
+    //     robot.advance();
+    //     this.robot.face(IRobot.BEHIND);
+    //     robot.advance();
+    //     // Make robot face North
+    //     this.robot.setHeading(IRobot.NORTH);
+    // }
 }
