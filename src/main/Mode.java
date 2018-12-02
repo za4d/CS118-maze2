@@ -4,7 +4,7 @@ import java.awt.Point;
 // Enum used as values are constants and expansion is limited
 public enum Mode {
         Explore(true),
-        Backtrack(false);
+        BackTrack(false);
 
         // Is the robot exploring?
         private boolean exploring;

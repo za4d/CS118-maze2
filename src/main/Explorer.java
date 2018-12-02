@@ -14,7 +14,7 @@ public class Explorer implements IRobotController {
     // RobotData to create and store the data on the junctions the robot encounters
     private RobotData robotData;
 
-    // Robot exploration mode: true = Explore, false = Backtrack
+    // Robot exploration mode: true = Explore, false = BackTrack
     private Mode mode;
 
 
@@ -43,43 +43,102 @@ public class Explorer implements IRobotController {
 
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
 
-            if (mode.isExploring()) direction = exploreControl();
+            if (mode.isExploring()) {
+                direction = exploreControl();
+            }  else {
+                direction = backtrackControl();
+            }
 
             robot.face(direction);
             robot.advance();
 
             //TODO: Reset Delay to normal
+            // wait for a while if we are supposed to
             if (delay > 0)
-            robot.sleep(delay*2);
+                robot.sleep(delay*2);
         }
     }
 
 
+
+    // EXPLORE CONTROLLER
     public int exploreControl() {
 
-        // wait for a while if we are supposed to
         int exits = nonwallExits();
 
         switch (exits) {
             case 1:
-                mode = Mode.Backtrack;
+                mode = Mode.BackTrack;
                 return deadEnd();
             case 2:
                 return corridor();
             case 3:
             case 4:
                 // When the robot is at a junction or corridor,
-                // search robotData for the junction
-                if (robotData.findJunction(robot.getLocation()) == -1) // If junction not in data store (position = -1)...
-                robotData.addJunction(robot.getLocation(), robot.getHeading());//...then add it
+                // Search robotData for a junction in current position
+                Junction junc = robotData.findJunction(robot.getLocation());
 
-                // Test if junctions are correctly recorded
+                // If returned junction ID (array index) is -1 then junction not in array...
+                if (junc.getID() == -1)
+                    robotData.addJunction(robot.getLocation(), robot.getHeading());//...so add junction to array
+
+                // Manual check for if junctions are correctly recorded
                 robotData.printJunction();
+
                 return junction();
             default:
                 return IRobot.CENTRE;
         }
     }
+
+
+
+    // BACKTRACK CONTROLLER
+    public int backtrackControl() {
+        
+        int exits = nonwallExits();
+
+        switch (exits) {
+            case 1:
+                return deadEnd();
+            case 2:
+                return corridor();
+            case 3:
+            case 4:
+                // When the robot is at a junction or corridor,
+                // Search robotData for a junction in current position
+                Junction junc = robotData.findJunction(robot.getLocation());
+
+                // If returned junction ID (array index) is -1 then junction not in array...
+                if (junc.getID() == -1)
+                    robotData.addJunction(robot.getLocation(), robot.getHeading());//...so add junction to array
+
+                // Manual check for if junctions are correctly recorded
+                robotData.printJunction();
+
+                return junction();
+            default:
+                return IRobot.CENTRE;
+        }
+    }
+
+    //Returns opposite heading
+    public int reverseHeading(int h) {
+        switch(h) {
+            case IRobot.NORTH:
+                return IRobot.SOUTH;
+            case IRobot.EAST:
+                return IRobot.WEST;
+            case IRobot.SOUTH:
+                return IRobot.NORTH;
+            case IRobot.WEST:
+                return IRobot.EAST;
+            default:
+                return IRobot.CENTRE;
+        }
+    }
+
+
 
     //TODO:: Fix comments for direction array changes
     //Note: methods are public to allow gradle tests
@@ -87,11 +146,15 @@ public class Explorer implements IRobotController {
     // returns a number indicating how many non-wall exits there
     // are surrounding the robot's current position
     public int nonwallExits() {
+        return nonwallExits(Directions.All.shuffled());
+    }
+
+    public int nonwallExits(int[] directions) {
         int exits = 4;
         // Direction.values() is an array of values Direction in the enumeration
         // Each direction is tested, and if its a wall the number of exits is decreased
 
-        for (int dir : Directions.All.shuffled() ) {
+        for (int dir : directions ) {
             if (robot.look(dir) == IRobot.WALL) exits--;
         }
         return exits;
@@ -203,126 +266,6 @@ public class Explorer implements IRobotController {
         this.robot = robot;
     }
 
-
-
-    // // ENUMS DECLARATIONS
-
-}
-
-
-// TODO:: Seperate Classes Seperate files?
-
-//TODO:: Descibe how i recorded the juntions
-class RobotData {
-    // size of Junction array
-    private static int maxJunctions = 900;
-    // counter for current empty array index
-    private static int juncCount;
-    // Array for storing list of juctions visited
-    private Junction[] junctionList = new Junction[maxJunctions];
-
-    // initialise RobotData object and set junction counter to 0
-    RobotData() {
-        resetJuncCount();
-    }
-
-    // reset junction Counter to 0
-    public void resetJuncCount() {
-        this.juncCount = 0;
-    }
-
-    // return current juncCounter value
-    public int getJuncCount() {
-        return this.juncCount;
-    }
-
-    //Adds juction to the Array and increments the counter
-    public void addJunction(Point position, int arrivalHeading) {
-        this.junctionList[this.juncCount++] = new Junction(position, arrivalHeading);
-    }
-
-    //Adds juction to the Array and increments the counter
-    public void addJunction(int x, int y, int arrivalHeading) {
-        addJunction(new Point(x,y), arrivalHeading);
-    }
-
-
-    //Search junction list for matching position Point
-    //TODO::(searches backwards as your more likely to cros a junction you recently found)
-    public int findJunction(Point junc) {
-        for (int i=0; i < getJuncCount(); i++) {
-            if (this.junctionList[i].position.equals(junc)) return i;
-        }
-        return -1;
-    }
-
-    //Search junction list for matching X and Y coordinates
-    public int findJunction(int x,int y) {
-        // create Point object for the position
-        Point junc = new Point(x,y);
-        //Search data store for matching point
-        return findJunction(junc);
-    }
-
-    //Prints juction i details to terminal
-    public void printJunction(int i) {
-        // print out Coordinates of a junction in the array
-        System.out.println("Junction "+i+" -- heading "+headingToString(this.junctionList[i].arrivalHeading())+" -- "+this.junctionList[i].position.toString());
-    }
-
-    public void printJunction() {
-        //if no index specifed print most recent junction
-        printJunction(this.juncCount-1);
-    }
-
-    //Convert integer heading to string
-    public String headingToString(int dir) {
-        switch(dir) {
-            case 1000:
-                return "North";
-            case 1001:
-                return "East";
-            case 1002:
-                return "South";
-            case 1003:
-                return "West";
-            default:
-                return "INVALID";
-        }
-    }
-
-
-}
-
-
-
-class Junction {
-    // Coordinate of junction in a point object
-    protected Point position;
-    // initial heading when robot arrived at junction
-    private int arrivalHeading;
-
-    //Constructs a Junction given a Point and Heading
-    Junction(Point position,int arrivalHeading) {
-        this.position = position;
-        this.arrivalHeading = arrivalHeading;
-    }
-
-    //Constructs a Junction given x adn y coordinates and Heading
-    Junction(int x, int y,int arrivalHeading) {
-        this.position = new Point(x,y);
-        this.arrivalHeading = arrivalHeading;
-    }
-
-    //returns the arrival Heading of a junction
-    public int arrivalHeading() {
-        return this.arrivalHeading;
-    }
-
-    //TODO:: remove position getter?
-    public Point position() {
-        return this.position;
-    }
 
 
 }

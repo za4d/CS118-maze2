@@ -1,6 +1,6 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
-
+// TODO:: LOOK around method to group all the loops in dead end corridor ..
 // enum used as the 2 are constant and thier methods can be grouped together
 public enum Directions {
         // Array of all directions
