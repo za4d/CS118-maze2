@@ -16,24 +16,12 @@ public class Explorer implements IRobotController {
     private static final int[] forwardDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
     // RobotData to create and store the data on the junctions the robot encounters
     private RobotData robotData;
-
-
-    // // returns and array which has been ROTATED a random number of times
-    // // TODO: Better Randomise?
-    // private static int[] randRotate(int[] array) {
-    //     int[] rotatedArray = new int[array.length]; // Rotated array
-    //
-    //     int r = (int)( Math.random() * array.length ); // random position rotated array will start from
-    //
-    //     for (int i = 0; i < array.length; i++) {
-    //         rotatedArray[i] = array[(r + i) % array.length];
-    //     }
-    //     return rotatedArray;
-    // }
+    // Robot exploration mode: true = Explore, false = Backtrack
+    private boolean explorerMode;
 
     // Quickly returns an array with its elements shuffled around
     private static int[] shuffleArray(int[] array) {
-        for ( int i=array.length-1 ; i>0 ; i++ ) {
+        for ( int i=array.length-1 ; i>0 ; i-- ) {
             int r = (int)( Math.random() * array.length ); // r = random index in array
             int e = array[r]; // e = element in random array position 'r'
             array[r] = array[i]; // swap current element 'i' with random element at 'r'
@@ -46,8 +34,10 @@ public class Explorer implements IRobotController {
     // in the user interface
     public void start() {
         this.active = true;
+        this.explorerMode = true;
         int exits;
         int direction = -1;
+
 
         //Reset Junction Array and Counter to 0 for new junctions
         if (robot.getRuns() == 0) {
@@ -55,6 +45,7 @@ public class Explorer implements IRobotController {
             this.robotData = new RobotData();
         }
 
+        //Seperates terminal outputs of different Runs
         System.out.println("\n\n\n Maze Started:\n");
 
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
@@ -99,6 +90,13 @@ public class Explorer implements IRobotController {
         }
     }
 
+
+    public void exploreControl() {
+
+    }
+
+
+    //Note: methods are public to allow gradle tests
 
     // returns a number indicating how many non-wall exits there
     // are surrounding the robot's current position
@@ -152,6 +150,7 @@ public class Explorer implements IRobotController {
          return -1;
     }
 
+    //TODO:: Combine junction and crossroads?
     /* JUNCTION: number of Exits is 3
     e.g.    #   #
               V
@@ -245,8 +244,9 @@ public class Explorer implements IRobotController {
 }
 
 
+// TODO:: Seperate Classes Seperate files?
 
-//TODO: Descibe how i recorded the juntions
+//TODO:: Descibe how i recorded the juntions
 class RobotData {
     private static int maxJunctions = 900;
     private static int juncCount;
@@ -280,6 +280,7 @@ class RobotData {
 
 
     //Search junction list for matching position Point
+    //TODO::(searches backwards as your more likely to cros a junction you recently found)
     public int findJunction(Point junc) {
         for (int i=0; i < getJuncCount(); i++) {
             if (this.junctionList[i].position.equals(junc)) return i;

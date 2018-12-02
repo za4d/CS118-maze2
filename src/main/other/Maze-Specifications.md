@@ -3,9 +3,16 @@
 ## Task 2.1.2
  - modify run to store result in Exits
 
-## Task
+## Task 2.1.3
  - Extend it so it distributes control accoding to Exits
  - These methods should return a direction which run will take
+
+## 2.1.13
+ - initially explore Maze
+ - when deadend or unexplored junction found, reverse and switch to backtracking mode
+ - while backtracking, if junction with unexplored exits found, explore it
+ - else if no unexplored exits exit junction in opposite direction to intial headingwhen it was found
+
 
 
 
