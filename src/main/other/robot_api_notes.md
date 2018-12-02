@@ -13,7 +13,7 @@ NORTH+1=EAST, EAST+1=SOUTH, SOUTH+1=WEST
 - IRobot.RIGHT [2001]
 - IRobot.BEHIND [2002]
 - IRobot.LEFT [2003]
-- IRobot.CENTRE ~ Do Nothing
+- IRobot.CENTRE [2004] ~ Do Nothing
 
 Same addition rule from above applies
 

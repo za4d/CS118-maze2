@@ -34,9 +34,10 @@ public class Explorer implements IRobotController {
     // in the user interface
     public void start() {
         this.active = true;
+        // Start robot on explorerMode
         this.explorerMode = true;
-        int exits;
-        int direction = -1;
+        // direction varible the robot will move toward in a given step
+        int direction = IRobot.CENTRE; // initialise as centre i.e. No Direction
 
 //TODO: remove Info
 // Info.all();
@@ -53,33 +54,7 @@ public class Explorer implements IRobotController {
 
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
 
-
-            // wait for a while if we are supposed to
-            exits = nonwallExits();
-
-            switch (exits) {
-                case 0:
-
-                    break;
-                case 1:
-                    direction = deadEnd();
-                    break;
-                case 2:
-                    direction = corridor();
-                    break;
-                case 3:
-                case 4:
-                    direction = junction();
-                    // If robot is at a junction or corridor,
-                    // search robotData for the junction
-                    if (robotData.findJunction(robot.getLocation()) == -1)
-                    robotData.addJunction(robot.getLocation(), robot.getHeading());// If junction not in data store, add it
-
-                    // Test if junctions are correctly recorded
-                    robotData.printJunction();
-                    break;
-            }
-
+            if (this.explorerMode) direction = exploreControl();
 
             robot.face(direction);
             robot.advance();
@@ -91,8 +66,29 @@ public class Explorer implements IRobotController {
     }
 
 
-    public void exploreControl() {
+    public int exploreControl() {
 
+        // wait for a while if we are supposed to
+        int exits = nonwallExits();
+
+        switch (exits) {
+            case 1:
+                return deadEnd();
+            case 2:
+                return corridor();
+            case 3:
+            case 4:
+                // When the robot is at a junction or corridor,
+                // search robotData for the junction
+                if (robotData.findJunction(robot.getLocation()) == -1) // If junction not in data store (position = -1)...
+                robotData.addJunction(robot.getLocation(), robot.getHeading());//...then add it
+
+                // Test if junctions are correctly recorded
+                robotData.printJunction();
+                return junction();
+            default:
+                return IRobot.CENTRE;
+        }
     }
 
 
@@ -150,7 +146,7 @@ public class Explorer implements IRobotController {
          return -1;
     }
 
-    //TODO:: (COMBINE EXPLANATIONS)Combine junction and crossroads? 
+    //TODO:: (COMBINE EXPLANATIONS)Combine junction and crossroads?
     /* JUNCTION: number of Exits is 3
     e.g.    #   #
               V
@@ -230,9 +226,11 @@ public class Explorer implements IRobotController {
 
 //TODO:: Descibe how i recorded the juntions
 class RobotData {
+    // size of Junction array
     private static int maxJunctions = 900;
+    // counter for current empty array index
     private static int juncCount;
-
+    // Array for storing list of juctions visited
     private Junction[] junctionList = new Junction[maxJunctions];
 
     // initialise RobotData object and set junction counter to 0
