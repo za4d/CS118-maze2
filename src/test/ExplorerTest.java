@@ -7,6 +7,8 @@ import uk.ac.warwick.dcs.maze.logic.IRobot;
 import uk.ac.warwick.dcs.maze.logic.RobotImpl;
 import java.awt.Point;
 
+import java.util.Arrays;
+
 /*
 This class contains unit tests for the HomingController class.
 */
@@ -57,7 +59,14 @@ public class ExplorerTest {
 
     @Test(timeout=10000)
     public void nonwallExitsTest() {
-
+// //TEMP
+//         int[] a = Directions.All.shuffledArray();
+//         for (int i=0; i<4; i++) {
+//         assertTrue(
+//         Arrays.toString(a),
+//         1 == 0);
+//     }
+// //TEMP
         //Add WALL NORTH
         setNorth(Maze.WALL);
         assertTrue(
@@ -252,12 +261,37 @@ public class ExplorerTest {
 
 
 
-    // private void setbeenbefore(int dir) {
-    //     this.robot.setHeading(dir);
-    //     robot.advance();
-    //     this.robot.face(IRobot.BEHIND);
-    //     robot.advance();
-    //     // Make robot face North
-    //     this.robot.setHeading(IRobot.NORTH);
+    // enum Directions {
+    //     All(true),
+    //     Forward(false);
+    //
+    //     private int[] directionArray;
+    //
+    //     // Creates Array with Directions
+    //     Directions(boolean all) {
+    //         if (all) {
+    //             this.directionArray = new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND};
+    //         } else {
+    //             this.directionArray = new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
+    //         }
+    //     }
+    //
+    //     // Returns SHUFFLED array of directions
+    //     public int[] shuffledArray() {
+    //         int[] array = this.directionArray;
+    //         for ( int i=array.length-1 ; i>0 ; i-- ) {
+    //             int r = (int)( Math.random() * array.length ); // r = random index in array
+    //             int e = array[r]; // e = element in random array position 'r'
+    //             array[r] = array[i]; // swap current element 'i' with random element at 'r'
+    //             array[i] = e;
+    //         }
+    //         return array;
+    //     }
+    //
+    //     // Returns Ordered array of directions
+    //     public int[] array() {
+    //         return this.directionArray;
+    //     }
+    //
     // }
 }

@@ -10,37 +10,26 @@ public class Explorer implements IRobotController {
     // a value (in ms) indicating how long we should wait
     // between moves
     private int delay;
-    // A CONSTANT array of all directions
-    private static final int[] allDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND}; // BEHIND Last so its only checked in the worst case
-    // All directions Excluding behind
-    private static final int[] forwardDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
+
     // RobotData to create and store the data on the junctions the robot encounters
     private RobotData robotData;
-    // Robot exploration mode: true = Explore, false = Backtrack
-    private boolean explorerMode;
 
-    // Quickly returns an array with its elements shuffled around
-    private static int[] shuffleArray(int[] array) {
-        for ( int i=array.length-1 ; i>0 ; i-- ) {
-            int r = (int)( Math.random() * array.length ); // r = random index in array
-            int e = array[r]; // e = element in random array position 'r'
-            array[r] = array[i]; // swap current element 'i' with random element at 'r'
-            array[i] = e;
-        }
-        return array;
-    }
+    // Robot exploration mode: true = Explore, false = Backtrack
+    private Mode mode;
+
 
     // this method is called when the "start" button is clicked
     // in the user interface
     public void start() {
         this.active = true;
-        // Start robot on explorerMode
-        this.explorerMode = true;
+        // Start robot on Exploring mode
+        mode = Mode.Explore;
+
         // direction varible the robot will move toward in a given step
         int direction = IRobot.CENTRE; // initialise as centre i.e. No Direction
 
-//TODO: remove Info
-// Info.all();
+        //TODO: remove Info
+        // Info.all();
 
 
         //Reset Junction Array and Counter to 0 for new junctions
@@ -54,7 +43,7 @@ public class Explorer implements IRobotController {
 
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
 
-            if (this.explorerMode) direction = exploreControl();
+            if (mode.isExploring()) direction = exploreControl();
 
             robot.face(direction);
             robot.advance();
@@ -73,6 +62,7 @@ public class Explorer implements IRobotController {
 
         switch (exits) {
             case 1:
+                mode = Mode.Backtrack;
                 return deadEnd();
             case 2:
                 return corridor();
@@ -91,7 +81,7 @@ public class Explorer implements IRobotController {
         }
     }
 
-
+    //TODO:: Fix comments for direction array changes
     //Note: methods are public to allow gradle tests
 
     // returns a number indicating how many non-wall exits there
@@ -100,7 +90,8 @@ public class Explorer implements IRobotController {
         int exits = 4;
         // Direction.values() is an array of values Direction in the enumeration
         // Each direction is tested, and if its a wall the number of exits is decreased
-        for (int dir : this.allDirections ) {
+
+        for (int dir : Directions.All.shuffled() ) {
             if (robot.look(dir) == IRobot.WALL) exits--;
         }
         return exits;
@@ -111,7 +102,7 @@ public class Explorer implements IRobotController {
         int beenbeforeExits = 0;
         // Direction.values() is an array of values Direction in the enumeration
         // Each direction is tested, and if its a wall the number of exits is decreased
-        for (int dir : this.allDirections ) {
+        for (int dir : Directions.All.shuffled()  ) {
             if (robot.look(dir) == IRobot.BEENBEFORE) beenbeforeExits++;
         }
         return beenbeforeExits;
@@ -125,10 +116,10 @@ public class Explorer implements IRobotController {
 
     Assumes there only 1 non wall (its a dead end) and returns the direction that exit. */
     public int deadEnd() {
-        for (int dir : this.allDirections) {
+        for (int dir : Directions.All.shuffled() ) {
             if (robot.look(dir) != IRobot.WALL) return dir;
         }
-         return -1;
+        return -1;
     }
 
 
@@ -140,7 +131,7 @@ public class Explorer implements IRobotController {
     There 2 exit and 1 is BEHIND you (which you shouldnt take),
     therefore we search the remaining 3 directions for the exit that isnt backtracking. */
     public int corridor() {
-        for (int dir : this.forwardDirections) {
+        for (int dir : Directions.Forwards.shuffled()) {
             if (robot.look(dir) != IRobot.WALL) return dir;
         }
          return -1;
@@ -162,16 +153,14 @@ public class Explorer implements IRobotController {
     Junction and Crossroad code are the same and therfore are combined*/
     public int junction() {
         // make a randomised array of directions (which arn't backwards)...
-        int[] directions = shuffleArray(this.forwardDirections);
-
         // Look around for any unexplored corridors
-        for (int dir : directions) {
+        for (int dir : Directions.Forwards.shuffled()) {
             if (robot.look(dir) == IRobot.PASSAGE) return dir;
         }
 
         // If all exits have been searched before,
         // choose a random direction that isnt a wall
-        for (int dir : directions) {
+        for (int dir : Directions.Forwards.shuffled()) {
             if (robot.look(dir) != IRobot.WALL) return dir;
         }
 
@@ -217,8 +206,7 @@ public class Explorer implements IRobotController {
 
 
     // // ENUMS DECLARATIONS
-    //
-    // public void look
+
 }
 
 
