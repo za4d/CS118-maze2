@@ -230,8 +230,12 @@ public class ExplorerTest {
     }
     */
 
-    //Been beenbeforeExits tesed by obsevations
+    //Been beenbeforeExits tested by obsevations
     //System.out.println(beenbeforeExits());
+
+    // Tested if junctions are correctly recorded
+    // robotData.printJunction();
+
 
     private void setNorth(int wallType) {
         this.maze.setCellType(2, 1, wallType);

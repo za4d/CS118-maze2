@@ -10,16 +10,20 @@ public class Explorer implements IRobotController {
     // a value (in ms) indicating how long we should wait
     // between moves
     private int delay;
-
+    // A CONSTANT array of all directions
     private static final int[] allDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND}; // BEHIND Last so its only checked in the worst case
+    // All directions Excluding behind
     private static final int[] forwardDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
+    // RobotData to create and store the data on the junctions the robot encounters
+    private RobotData robotData;
+
 
     // returns and array which has been ROTATED a random number of times
     // TODO: Better Randomise?
     private static int[] randRotate(int[] array) {
         int[] rotatedArray = new int[array.length]; // Rotated array
 
-        int r = (int)( Math.random() * array.length ); // random postion rotated array will start from
+        int r = (int)( Math.random() * array.length ); // random position rotated array will start from
 
         for (int i = 0; i < array.length; i++) {
             rotatedArray[i] = array[(r + i) % array.length];
@@ -33,6 +37,14 @@ public class Explorer implements IRobotController {
         this.active = true;
         int exits;
         int direction = -1;
+
+        //Reset Junction Array and Counter to 0 for new junctions
+        if (robot.getRuns() == 0) {
+            //initialse new data store
+            this.robotData = new RobotData();
+        }
+
+        System.out.println("\n\n\n Maze Started:\n");
 
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
 
@@ -56,6 +68,16 @@ public class Explorer implements IRobotController {
                 case 4:
                     direction = crossroads();
                     break;
+            }
+
+            // If robot is at a junction or corridor
+            if(exits >= 3) {
+                // search data store for the junction
+                // if junction not in data store, add it
+                if (robotData.findJunction(robot.getLocation()) == -1)
+                    robotData.addJunction(robot.getLocation(), robot.getHeading());
+                    // Test if junctions are correctly recorded
+                    // robotData.printJunction();
             }
 
             robot.face(direction);
@@ -194,6 +216,7 @@ public class Explorer implements IRobotController {
     // stops the controller
     public void reset() {
         active = false;
+        this.robotData.resetJuncCount();
     }
 
 
@@ -210,34 +233,85 @@ public class Explorer implements IRobotController {
     // public void look
 }
 
+
+
 //TODO: Descibe how i recorded the juntions
 class RobotData {
     private static int maxJunctions = 900;
-    private static int junctionCount;
+    private static int juncCount;
 
-    private JunctionData[] junctions = new JunctionData[maxJunctions];
+    private Junction[] junctionList = new Junction[maxJunctions];
+
+    RobotData() {
+        resetJuncCount();
+    }
+
+    public void resetJuncCount() {
+        this.juncCount = 0;
+    }
+
+    public int getJuncCount() {
+        return this.juncCount;
+    }
+
+    public void addJunction(Point position, int arrivalHeading) {
+        this.junctionList[this.juncCount++] = new Junction(position, arrivalHeading);
+    }
+
+    public void addJunction(int x, int y, int arrivalHeading) {
+        addJunction(new Point(x,y), arrivalHeading);
+    }
+
+    public int findJunction(Point junc) {
+        //Search data store for matching point
+        for (int i=0; i < getJuncCount(); i++) {
+            if (this.junctionList[i].position.equals(junc)) return i;
+        }
+        return -1;
+    }
+
+    public int findJunction(int x,int y) {
+        // create Point object for the position
+        Point junc = new Point(x,y);
+        //Search data store for matching point
+        return findJunction(junc);
+    }
+
+    public void printJunction(int i) {
+        // print out Coordinates of a junction in the array
+        System.out.println("Junction "+i+" -- heading "+this.junctionList[i].arrivalHeading()+" -- "+this.junctionList[i].position.toString());
+    }
+
+    public void printJunction() {
+        //if no index specifed print most recent junction
+        printJunction(this.juncCount-1);
+    }
 }
 
-class JunctionData {
-    private int xPos;
-    private int yPos;
+
+
+class Junction {
+    // Coordinate of junction in a point object
+    protected Point position;
+    // initial heading when robot arrived at junction
     private int arrivalHeading;
 
-    JunctionData(int xPos, int yPos,int arrivalHeading) {
-        this.xPos = xPos;
-        this.yPos = yPos;
+    Junction(Point position,int arrivalHeading) {
+        this.position = position;
         this.arrivalHeading = arrivalHeading;
     }
 
-    public int xPos() {
-        return this.xPos;
-    }
-
-    public int yPos() {
-        return this.yPos;
+    Junction(int x, int y,int arrivalHeading) {
+        this.position = new Point(x,y);
+        this.arrivalHeading = arrivalHeading;
     }
 
     public int arrivalHeading() {
         return this.arrivalHeading;
     }
+    //TODO:: remove position getter?
+    public Point position() {
+        return this.position;
+    }
+
 }
