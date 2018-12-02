@@ -18,17 +18,28 @@ public class Explorer implements IRobotController {
     private RobotData robotData;
 
 
-    // returns and array which has been ROTATED a random number of times
-    // TODO: Better Randomise?
-    private static int[] randRotate(int[] array) {
-        int[] rotatedArray = new int[array.length]; // Rotated array
+    // // returns and array which has been ROTATED a random number of times
+    // // TODO: Better Randomise?
+    // private static int[] randRotate(int[] array) {
+    //     int[] rotatedArray = new int[array.length]; // Rotated array
+    //
+    //     int r = (int)( Math.random() * array.length ); // random position rotated array will start from
+    //
+    //     for (int i = 0; i < array.length; i++) {
+    //         rotatedArray[i] = array[(r + i) % array.length];
+    //     }
+    //     return rotatedArray;
+    // }
 
-        int r = (int)( Math.random() * array.length ); // random position rotated array will start from
-
-        for (int i = 0; i < array.length; i++) {
-            rotatedArray[i] = array[(r + i) % array.length];
+    // Quickly returns an array with its elements shuffled around
+    private static int[] shuffleArray(int[] array) {
+        for ( int i=array.length-1 ; i>0 ; i++ ) {
+            int r = (int)( Math.random() * array.length ); // r = random index in array
+            int e = array[r]; // e = element in random array position 'r'
+            array[r] = array[i]; // swap current element 'i' with random element at 'r'
+            array[i] = e;
         }
-        return rotatedArray;
+        return array;
     }
 
     // this method is called when the "start" button is clicked
@@ -150,7 +161,7 @@ public class Explorer implements IRobotController {
     Else if there isnt any we randomly choose from the others.*/
     public int junction() {
         // make a randomised array of directions (which arn't backwards)...
-        int[] directions = randRotate(this.forwardDirections);
+        int[] directions = shuffleArray(this.forwardDirections);
 
         // Look across array for any unexplored corridors
         for (int dir : directions) {
@@ -174,7 +185,7 @@ public class Explorer implements IRobotController {
     */
     public int crossroads() {
         // make a randomised array of directions (which arn't backwards)...
-        int[] directions = randRotate(this.forwardDirections);
+        int[] directions = shuffleArray(this.forwardDirections);
 
         // Look around for any unexplored corridors
         for (int dir : directions) {
@@ -242,34 +253,41 @@ class RobotData {
 
     private Junction[] junctionList = new Junction[maxJunctions];
 
+    // initialise RobotData object and set junction counter to 0
     RobotData() {
         resetJuncCount();
     }
 
+    // reset junction Counter to 0
     public void resetJuncCount() {
         this.juncCount = 0;
     }
 
+    // return current juncCounter value
     public int getJuncCount() {
         return this.juncCount;
     }
 
+    //Adds juction to the Array and increments the counter
     public void addJunction(Point position, int arrivalHeading) {
         this.junctionList[this.juncCount++] = new Junction(position, arrivalHeading);
     }
 
+    //Adds juction to the Array and increments the counter
     public void addJunction(int x, int y, int arrivalHeading) {
         addJunction(new Point(x,y), arrivalHeading);
     }
 
+
+    //Search junction list for matching position Point
     public int findJunction(Point junc) {
-        //Search data store for matching point
         for (int i=0; i < getJuncCount(); i++) {
             if (this.junctionList[i].position.equals(junc)) return i;
         }
         return -1;
     }
 
+    //Search junction list for matching X and Y coordinates
     public int findJunction(int x,int y) {
         // create Point object for the position
         Point junc = new Point(x,y);
@@ -277,6 +295,7 @@ class RobotData {
         return findJunction(junc);
     }
 
+    //Prints juction i details to terminal
     public void printJunction(int i) {
         // print out Coordinates of a junction in the array
         System.out.println("Junction "+i+" -- heading "+this.junctionList[i].arrivalHeading()+" -- "+this.junctionList[i].position.toString());
@@ -296,19 +315,23 @@ class Junction {
     // initial heading when robot arrived at junction
     private int arrivalHeading;
 
+    //Constructs a Junction given a Point and Heading
     Junction(Point position,int arrivalHeading) {
         this.position = position;
         this.arrivalHeading = arrivalHeading;
     }
 
+    //Constructs a Junction given x adn y coordinates and Heading
     Junction(int x, int y,int arrivalHeading) {
         this.position = new Point(x,y);
         this.arrivalHeading = arrivalHeading;
     }
 
+    //returns the arrival Heading of a junction
     public int arrivalHeading() {
         return this.arrivalHeading;
     }
+
     //TODO:: remove position getter?
     public Point position() {
         return this.position;
