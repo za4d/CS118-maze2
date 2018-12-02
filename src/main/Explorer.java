@@ -14,6 +14,18 @@ public class Explorer implements IRobotController {
     private static final int[] allDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND}; // BEHIND Last so its only checked in the worst case
     private static final int[] forwardDirections = {IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
 
+    // returns and array which has been ROTATED a random number of times
+    // TODO: Better Randomise?
+    private static int[] randRotate(int[] array) {
+        int[] rotatedArray = new int[array.length]; // Rotated array
+
+        int r = (int)( Math.random() * array.length ); // random postion rotated array will start from
+
+        for (int i = 0; i < array.length; i++) {
+            rotatedArray[i] = array[(r + i) % array.length];
+        }
+        return rotatedArray;
+    }
 
     // this method is called when the "start" button is clicked
     // in the user interface
@@ -23,6 +35,8 @@ public class Explorer implements IRobotController {
         int direction = -1;
 
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
+
+
             // wait for a while if we are supposed to
             exits = nonwallExits();
 
@@ -50,6 +64,30 @@ public class Explorer implements IRobotController {
             if (delay > 0)
             robot.sleep(delay);
         }
+    }
+
+
+    // returns a number indicating how many non-wall exits there
+    // are surrounding the robot's current position
+    public int nonwallExits() {
+        int exits = 4;
+        // Direction.values() is an array of values Direction in the enumeration
+        // Each direction is tested, and if its a wall the number of exits is decreased
+        for (int dir : this.allDirections ) {
+            if (robot.look(dir) == IRobot.WALL) exits--;
+        }
+        return exits;
+    }
+
+
+    public int beenbeforeExits() {
+        int beenbeforeExits = 0;
+        // Direction.values() is an array of values Direction in the enumeration
+        // Each direction is tested, and if its a wall the number of exits is decreased
+        for (int dir : this.allDirections ) {
+            if (robot.look(dir) == IRobot.BEENBEFORE) beenbeforeExits++;
+        }
+        return beenbeforeExits;
     }
 
 
@@ -81,7 +119,6 @@ public class Explorer implements IRobotController {
          return -1;
     }
 
-    // TODO: Test JUNCTION
     /* JUNCTION: number of Exits is 3
     e.g.    #   #
               V
@@ -133,20 +170,6 @@ public class Explorer implements IRobotController {
 
 
 
-    // returns a number indicating how many non-wall exits there
-    // are surrounding the robot's current position
-    public int nonwallExits() {
-        int exits = 4;
-        // Direction.values() is an array of values Direction in the enumeration
-        // Each direction is tested, and if its a wall the number of exits is decreased
-        for (int dir : this.allDirections ) {
-            if (robot.look(dir) == IRobot.WALL) exits--;
-        }
-        return exits;
-    }
-
-
-
     // this method returns a description of this controller
     public String getDescription() {
         return "A controller which explores the maze in a structured way";
@@ -181,21 +204,40 @@ public class Explorer implements IRobotController {
     }
 
 
-    // returns and array which has been ROTATED a random number of times
-    private static int[] randRotate(int[] array) {
-        int[] rotatedArray = new int[array.length]; // Rotated array
-
-        int r = (int)( Math.random() * array.length ); // random postion rotated array will start from
-
-        for (int i = 0; i < array.length; i++) {
-            rotatedArray[i] = array[(r + i) % array.length];
-        }
-        return rotatedArray;
-    }
-
-
 
     // // ENUMS DECLARATIONS
     //
     // public void look
+}
+
+//TODO: Descibe how i recorded the juntions
+class RobotData {
+    private static int maxJunctions = 900;
+    private static int junctionCount;
+
+    private JunctionData[] junctions = new JunctionData[maxJunctions];
+}
+
+class JunctionData {
+    private int xPos;
+    private int yPos;
+    private int arrivalHeading;
+
+    JunctionData(int xPos, int yPos,int arrivalHeading) {
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.arrivalHeading = arrivalHeading;
+    }
+
+    public int xPos() {
+        return this.xPos;
+    }
+
+    public int yPos() {
+        return this.yPos;
+    }
+
+    public int arrivalHeading() {
+        return this.arrivalHeading;
+    }
 }

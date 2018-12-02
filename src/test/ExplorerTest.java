@@ -167,6 +167,8 @@ public class ExplorerTest {
         setEast(Maze.WALL);//reset to walls all around
     }
 
+
+
     //JUNCTION and CROSSROADS tested with custom Maze
 /*
     @Test(timeout=15000)
@@ -228,6 +230,8 @@ public class ExplorerTest {
     }
     */
 
+    //Been beenbeforeExits tesed by obsevations
+    //System.out.println(beenbeforeExits());
 
     private void setNorth(int wallType) {
         this.maze.setCellType(2, 1, wallType);
