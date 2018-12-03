@@ -17,7 +17,11 @@ public class RobotData {
 
     // reset junction Counter to 0
     public void resetJuncCount() {
-        this.juncCount = 0;
+        setJuncCount(0);
+    }
+
+    public void setJuncCount(int i) {
+        this.juncCount = i;
     }
 
     // return current juncCounter value

@@ -14,6 +14,8 @@ public class Program {
         logic.getControllerPool().addController(new HomingController());
         logic.getControllerPool().addController(new Explorer());
         logic.getControllerPool().addController(new Explorer2());
+        logic.getControllerPool().addController(new Explorer3());
+
         // run the maze
 		new MazeApp(logic);
     }

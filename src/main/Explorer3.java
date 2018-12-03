@@ -1,12 +1,15 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
-
+//TODO[ ? ] Single loop double loop
+//TODO[ ! ] Update after other Exploerers Clea`ned
 /*
-    Task 2.2 (Depth First):
-    
-
+    TASK 2.3 (Loopy):
+    When the robots path is about to form a loopv
+    (Exploring mode and square ahead is BEENBEFORE), reverse direction.
+    In affect its like the loop is cut as the BEENBEFORE "blocks" the robot
 */
+
 // TODO[ !!! ] LOOK around method to group all the loops in dead end corridor ...
 // TODO[ ? ] MAX number of steps
 // TODO: Improve Depth First junction store efficiency
@@ -69,7 +72,7 @@ System.out.print(mode.isExploring()+"\t");//TEMP
 
             if (mode.isExploring()) {
                 direction = exploreControl();
-                if (robot.look(direction) == IRobot.BEENBEFORE);
+                if (robot.look(direction) == IRobot.BEENBEFORE) direction = IRobot.BEHIND;
             }  else {
                 direction = backtrackControl();
             }
@@ -147,7 +150,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
                 //log junction
                 System.out.print("\t* Revisted -- Junction "+junc.getID()+" -- Returning "+headingToString(reverseHeading(junc.getArrivalHeading())));//heading "+headingToString(junc.getArrivalHeading())+" -- "+junc.position.toString());
 
-                // (For DepthFirst Efficiency) Move counter back to When
+                // Task 2.2.1 : (For DepthFirst Efficiency) Move counter back to When
                 // all junction paths exhausted
                 this.robotData.setJuncCount(junc.getID());
 
