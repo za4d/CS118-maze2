@@ -2,7 +2,7 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
 // enum used as the 2 are constant and thier methods can be grouped together
-public class RobotSurroundings {
+public class MazeSurroundings {
     // the robot in the maze
     private IRobot robot;
     // Array of Directions
@@ -10,7 +10,7 @@ public class RobotSurroundings {
 
 
     // initialse Array of Directions
-    RobotSurroundings(IRobot robot, int[] directionArray) {
+    MazeSurroundings(IRobot robot, int[] directionArray) {
         this.robot = robot;
         this.directionArray = directionArray;
     }

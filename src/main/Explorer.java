@@ -1,6 +1,7 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
+// TODO[ !!! ] Go through commments (after major changed have been made)
 // TODO[ !!! ] LOOK around method to group all the loops in dead end corridor ...
 // TODO[ ? ] MAX number of steps
 // TODO: BEAUTIFY!!
@@ -13,9 +14,6 @@ public class Explorer implements IRobotController {
     // between moves
     private int delay;
 
-    // String for logging movements to terminal
-    private String log;
-
     // RobotData to create and store the data on the junctions the robot encounters
     private RobotData robotData;
 
@@ -23,10 +21,10 @@ public class Explorer implements IRobotController {
     private Mode mode;
 
     // All directions
-    private RobotSurroundings lookAllAround;
+    private MazeSurroundings lookAllAround;
 
     // All directions Excluding BEHIND
-    private RobotSurroundings lookForwards;
+    private MazeSurroundings lookForwards;
 
     // this method is called when the "start" button is clicked
     // in the user interface
@@ -293,9 +291,9 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     // sets the reference to the robot
     public void setRobot(IRobot robot) {
         this.robot = robot;
-        //also initialse RobotSurroundings objects
-        this.lookAllAround = new RobotSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND});
-        this.lookForwards = new RobotSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT});
+        //also initialse MazeSurroundings objects
+        this.lookAllAround = new MazeSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND});
+        this.lookForwards = new MazeSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT});
     }
 
 
