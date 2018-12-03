@@ -70,26 +70,26 @@ public class ExplorerTest {
         //Add WALL NORTH
         setNorth(Maze.WALL);
         assertTrue(
-        "Failed when Wall added AHEAD - Exits = "+this.controller.nonwallExits(Directions.All.shuffled()),
-        this.controller.nonwallExits(Directions.All.shuffled()) == 3);
+        "Failed when Wall added AHEAD - Exits = "+this.controller.nonwallExits(),
+        this.controller.nonwallExits() == 3);
 
         //Add WALL SOUTH
         setSouth(Maze.WALL);
         assertTrue(
-        "Failed when Wall added AHEAD,BEHIND - Exits = "+this.controller.nonwallExits(Directions.All.shuffled()),
-        this.controller.nonwallExits(Directions.All.shuffled()) == 2);
+        "Failed when Wall added AHEAD,BEHIND - Exits = "+this.controller.nonwallExits(),
+        this.controller.nonwallExits() == 2);
 
         //Add WALL to WEST
         setWest(Maze.WALL);
         assertTrue(
-        "Failed when Wall added AHEAD,BEHIND,LEFT - Exits = "+this.controller.nonwallExits(Directions.All.shuffled()),
-        this.controller.nonwallExits(Directions.All.shuffled()) == 1);
+        "Failed when Wall added AHEAD,BEHIND,LEFT - Exits = "+this.controller.nonwallExits(),
+        this.controller.nonwallExits() == 1);
 
         //Add WALL to EAST
         setEast(Maze.WALL);
         assertTrue(
-        "Failed when Wall added AHEAD,BEHIND,LEFT,RIGHT - Exits = "+this.controller.nonwallExits(Directions.All.shuffled()),
-        this.controller.nonwallExits(Directions.All.shuffled()) == 0);
+        "Failed when Wall added AHEAD,BEHIND,LEFT,RIGHT - Exits = "+this.controller.nonwallExits(),
+        this.controller.nonwallExits() == 0);
     }
 
 

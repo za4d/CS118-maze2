@@ -4,7 +4,7 @@ import java.awt.Point;
 // TODO[ !!! ] LOOK around method to group all the loops in dead end corridor ...
 // TODO[ ? ] MAX number of steps
 // TODO: BEAUTIFY!!
-public class Explorer2 implements IRobotController {
+public class Explorer implements IRobotController {
     // the robot in the maze
     private IRobot robot;
     // a flag to indicate whether we are looking for a path
@@ -22,11 +22,17 @@ public class Explorer2 implements IRobotController {
     // Robot exploration mode: true = Explore, false = BackTrack
     private Mode mode;
 
+    // All directions
+    private RobotSurroundings lookAllAround;
+
+    // All directions Excluding BEHIND
+    private RobotSurroundings lookForwards;
 
     // this method is called when the "start" button is clicked
     // in the user interface
     public void start() {
         this.active = true;
+
         // Start robot on Exploring mode
         mode = Mode.Explore;
 
@@ -52,14 +58,19 @@ public class Explorer2 implements IRobotController {
         System.out.println("\n\n\n\n\n\n Maze Started:\n");
         System.out.println("POS\tEXPLR\tDIR\t\n");
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
+
+//TODO[ ! ] remove log Print or make cleaner method
 System.out.print(" ("+robot.getLocation().x+","+robot.getLocation().y+")\t");//TEMP
 System.out.print(mode.isExploring()+"\t");//TEMP
+
             if (mode.isExploring()) {
                 direction = exploreControl();
             }  else {
                 direction = backtrackControl();
             }
+
 System.out.print(directionToString(direction)+"\t");//TEMP
+
             robot.face(direction);
             robot.advance();
             System.out.println("");
@@ -74,14 +85,11 @@ System.out.print(directionToString(direction)+"\t");//TEMP
 
     // EXPLORE CONTROLLER
     public int exploreControl() {
-        if(passageExits(Directions.All.ordered()) == 0){
-            mode = Mode.BackTrack;
-        }
+        //  If there No unexplored exits (Passages), switch to BackTrack mode
+        if (!lookAllAround.isThereA(IRobot.PASSAGE)) mode = Mode.BackTrack;
 
-
-        int exits = nonwallExits(Directions.All.shuffled());
-
-        switch (exits) {
+        // Count number of (Non Wall) Exits
+        switch (lookAllAround.countExits()) {
             case 1:
                 return deadEnd();
             case 2:
@@ -111,20 +119,15 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     public int backtrackControl() {
 
         // Look for unexplored passages (Random order)
-        for (int dir : Directions.All.shuffled() ) {
-            // If passsage found...
-            if (robot.look(dir) == IRobot.PASSAGE) {
-                // ...set mode to Explore
-                mode = Mode.Explore;
-                // ...and go down the unexplored passage
-                return dir;
-            }
+        if (lookForwards.isThereA(IRobot.PASSAGE)) {
+            // If there's any Passages, set mode to Explore
+            mode = Mode.Explore;
+            // and randomly go down the unexplored passage
+            return lookForwards.nextRandom(IRobot.PASSAGE);
         }
 
-        //If theres no unexplored passages ...
-        int exits = nonwallExits(Directions.All.shuffled());
-
-        switch (exits) {
+        // Count number of (Non Wall) Exits
+        switch (lookAllAround.countExits()) {
             case 1:
                 return deadEnd();
             case 2:
@@ -202,41 +205,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     // returns a number indicating how many non-wall exits there
     // are surrounding the robot's current position
 
-    public int nonwallExits(int[] directions) {
-        int exits = 4;
-        // Direction.values() is an array of values Direction in the enumeration
-        // Each direction is tested, and if its a wall the number of exits is decreased
 
-        for (int dir : directions ) {
-            if (robot.look(dir) == IRobot.WALL) exits--;
-        }
-        return exits;
-    }
-
-    // public int nonwallExits() {
-    //     return nonwallExits(Directions.All.shuffled());
-    // }
-
-    public int passageExits(int[] directions) {
-        int exits = 0;
-        // Direction.values() is an array of values Direction in the enumeration
-        // Each direction is tested, and if its a wall the number of exits is decreased
-
-        for (int dir : directions ) {
-            if (robot.look(dir) == IRobot.PASSAGE) exits++;
-        }
-        return exits;
-    }
-
-    public int beenbeforeExits() {
-        int beenbeforeExits = 0;
-        // Direction.values() is an array of values Direction in the enumeration
-        // Each direction is tested, and if its a wall the number of exits is decreased
-        for (int dir : Directions.All.shuffled()  ) {
-            if (robot.look(dir) == IRobot.BEENBEFORE) beenbeforeExits++;
-        }
-        return beenbeforeExits;
-    }
 
 
     /* DEADEND: number of Exits = 1 (back the way you came)
@@ -246,10 +215,8 @@ System.out.print(directionToString(direction)+"\t");//TEMP
 
     Assumes there only 1 non wall (its a dead end) and returns the direction that exit. */
     public int deadEnd() {
-        for (int dir : Directions.All.shuffled() ) {
-            if (robot.look(dir) != IRobot.WALL) return dir;
-        }
-        return -1;
+        // returns direction of the (single) Non Wall exit to go back down
+        return lookAllAround.nextRandomExit();
     }
 
 
@@ -261,10 +228,8 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     There 2 exit and 1 is BEHIND you (which you shouldnt take),
     therefore we search the remaining 3 directions for the exit that isnt backtracking. */
     public int corridor() {
-        for (int dir : Directions.Forwards.shuffled()) {
-            if (robot.look(dir) != IRobot.WALL) return dir;
-        }
-         return -1;
+        // Randomly chooses one of the 2 Non Wall exits
+        return lookForwards.nextRandomExit();
     }
 
     //TODO[ ! ] (COMBINE EXPLANATIONS)Combine junction and crossroads?
@@ -284,17 +249,14 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     public int crossroad() {
         // make a randomised array of directions (which arn't backwards)...
         // Look around for any unexplored corridors
-        for (int dir : Directions.Forwards.shuffled()) {
-            if (robot.look(dir) == IRobot.PASSAGE) return dir;
-        }
+        if (lookForwards.isThereA(IRobot.PASSAGE)) {
+            // If there is, randomly choose and return one
+            return lookForwards.nextRandom(IRobot.PASSAGE);
+        };
 
-        // If all exits have been searched before,
+        // Wall all surrounding paths have been explored,
         // choose a random direction that isnt a wall
-        for (int dir : Directions.Forwards.shuffled()) {
-            if (robot.look(dir) != IRobot.WALL) return dir;
-        }
-
-         return -1;
+        return lookForwards.nextRandomExit();
     }
 
 
@@ -331,8 +293,14 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     // sets the reference to the robot
     public void setRobot(IRobot robot) {
         this.robot = robot;
+        //also initialse RobotSurroundings objects
+        this.lookAllAround = new RobotSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND});
+        this.lookForwards = new RobotSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT});
     }
 
 
+    public int nonwallExits() {
+        return lookAllAround.countExits();
+    }
 
 }

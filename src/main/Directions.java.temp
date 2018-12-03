@@ -2,19 +2,21 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
 // enum used as the 2 are constant and thier methods can be grouped together
-public enum Directions {
+public enum [ !!! ] {
         // Array of all directions
-        All(true),
+        AllAround(true),
         // Array of all directions Excluding BEHIND
         Forwards(false);
 
         private int[] directionArray;
 
         // Creates Array with Directions
-        Directions(boolean all) {
-            if (all) {
+        Directions(boolean includeBehind) {
+            if (includeBehind) {
+                // All directions including Behind
                 this.directionArray = new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND};
             } else {
+                // All directions expect Behind
                 this.directionArray = new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
             }
         }
