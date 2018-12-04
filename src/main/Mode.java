@@ -11,12 +11,17 @@ public enum Mode {
 
         // contructor sets isExploring boolean values
         Mode(boolean exploring) {
-            this.exploring = exploring;
+                this.exploring = exploring;
         }
 
         // Returns answer to is Mode Exploreing
         public boolean isExploring() {
-            return this.exploring;
+                return this.exploring;
         }
 
-    }
+        //TODO Remove?
+        public String getMode() {
+                return name();
+        }
+
+}

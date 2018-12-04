@@ -8,6 +8,10 @@ import uk.ac.warwick.dcs.maze.logic.RobotImpl;
 import uk.ac.warwick.dcs.maze.gui.MazeApp;
 import uk.ac.warwick.dcs.maze.logic.MazeLogic;
 
+// TODO ~ TODO[ !!! ]
+// REVIEW ~ TODO[ ! ]
+// NOTE ~ TODO:
+// QUESTION ~ TODO[ ? ]
 
 public class Info  implements IRobotController {
         // the robot in the maze

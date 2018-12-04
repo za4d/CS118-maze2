@@ -10,10 +10,11 @@ import java.awt.Point;
      and lead to dead ends are discarded and only the current path being searched is stored.
 
 */
-// TODO[ !!! ] LOOK around method to group all the loops in dead end corridor ...
-// TODO[ ? ] MAX number of steps
-// TODO: Improve Depth First junction store efficiency
-// TODO: Labal Tasks
+// TODO Implement tests for exploerer 2 and 3
+// TODO LOOK around method to group all the loops in dead end corridor ...
+// QUESTION MAX number of steps
+// NOTE Improve Depth First junction store efficiency
+// NOTE Labal Tasks
 public class Explorer2 implements IRobotController {
     // the robot in the maze
     private IRobot robot;
@@ -51,7 +52,7 @@ public class Explorer2 implements IRobotController {
         robot.face(deadEnd());
         robot.advance();
         if (delay > 0) robot.sleep(delay*2);
-        //TODO: remove Info
+        //NOTE remove Info
         // Info.all();
 
 
@@ -66,7 +67,7 @@ public class Explorer2 implements IRobotController {
         System.out.println("POS\tEXPLR\tDIR\t\n");
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
 
-//TODO[ ! ] remove log Print or make cleaner method
+//REVIEW remove log Print or make cleaner method
 System.out.print(" ("+robot.getLocation().x+","+robot.getLocation().y+")\t");//TEMP
 System.out.print(mode.isExploring()+"\t");//TEMP
 
@@ -82,7 +83,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
             robot.face(direction);
             robot.advance();
             System.out.println("");
-            //TODO: Reset Delay to normal
+            //NOTE Reset Delay to normal
             // wait for a while if we are supposed to
             if (delay > 0)
                 robot.sleep(delay*2);
@@ -122,7 +123,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     }
 
 
-//TODO[ !!! ] Cleanup passage exits test an non walls test
+//TODO Cleanup passage exits test an non walls test
     // BACKTRACK CONTROLLER
     public int backtrackControl() {
 
@@ -176,7 +177,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
             case IRobot.WEST:
                 return IRobot.EAST;
             default:
-            //TODO: Delete print?
+            //NOTE Delete print?
                 System.out.print("reverseHeading(Invalid Argument)");
                 return IRobot.CENTRE;
         }
@@ -214,7 +215,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
         }
     }
 
-    //TODO[ ! ] Fix comments for direction array changes
+    //REVIEW Fix comments for direction array changes
     //Note: methods are public to allow gradle tests
 
     // returns a number indicating how many non-wall exits there
@@ -247,7 +248,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
         return lookForwards.nextRandomExit();
     }
 
-    //TODO[ ! ] (COMBINE EXPLANATIONS)Combine junction and crossroads?
+    //REVIEW (COMBINE EXPLANATIONS)Combine junction and crossroads?
     /* JUNCTION: number of Exits is 3
     e.g.    #   #
               V

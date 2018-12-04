@@ -1,7 +1,7 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
-//TODO[ !!! ] Fix probabilities
+//TODO Fix probabilities
 
 // enum used as the 2 are constant and thier methods can be grouped together
 public class MazeSurroundings {
@@ -33,7 +33,7 @@ public class MazeSurroundings {
         // else if none found
         return -1;
         // return IRobot.Centre;
-        //TODO[ ! ] Replace -1's with IRobot.Centre
+        //REVIEW Replace -1's with IRobot.Centre
     }
 
 
@@ -81,7 +81,7 @@ public class MazeSurroundings {
         // else if none found
         return -1;
         // return IRobot.Centre;
-        //TODO[ ! ] Replace -1's with IRobot.Centre
+        //REVIEW Replace -1's with IRobot.Centre
     }
 
 
