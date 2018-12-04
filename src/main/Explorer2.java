@@ -4,7 +4,10 @@ import java.awt.Point;
 
 /*
     Task 2.2 (Depth First):
-    
+     - Renamed Junction Store (robotData) to be path store (robotPath)
+     - When backtracking through a junction, array counter moved to junction position
+     To improve my junction storge method, all junctions that: completly explored
+     and lead to dead ends are discarded and only the current path being searched is stored.
 
 */
 // TODO[ !!! ] LOOK around method to group all the loops in dead end corridor ...
@@ -20,8 +23,8 @@ public class Explorer2 implements IRobotController {
     // between moves
     private int delay;
 
-    // RobotData to create and store the data on the junctions the robot encounters
-    private RobotData robotData;
+    // RobotPath to create and store the data on the junctions the robot encounters
+    private RobotPath robotPath;
 
     // Robot exploration mode: true = Explore, false = BackTrack
     private Mode mode;
@@ -55,7 +58,7 @@ public class Explorer2 implements IRobotController {
         //Reset Junction Array and Counter to 0 for new junctions
         if (robot.getRuns() == 0) {
             //initialse new data store
-            this.robotData = new RobotData();
+            this.robotPath = new RobotPath();
         }
 
         //Seperates terminal outputs of different Runs
@@ -102,15 +105,15 @@ System.out.print(directionToString(direction)+"\t");//TEMP
             case 3:
             case 4:
                 // When the robot is at a junction or corridor,
-                // Search robotData for a junction in current position
-                Junction junc = robotData.findJunction(robot.getLocation());
+                // Search robotPath for a junction in current position
+                Junction junc = robotPath.findJunction(robot.getLocation());
 
                 // If returned junction ID (array index) is -1 then junction not in array...
                 if (junc.getID() == -1)
-                    robotData.addJunction(robot.getLocation(), robot.getHeading());//...so add junction to array
+                    robotPath.addJunction(robot.getLocation(), robot.getHeading());//...so add junction to array
 
                 // Manual check for if junctions are correctly recorded
-                robotData.printJunction();
+                robotPath.printJunction();
 
                 return crossroad();
             default:
@@ -140,8 +143,8 @@ System.out.print(directionToString(direction)+"\t");//TEMP
             case 3:
             case 4:
                 // When the robot is at a junction or corridor,
-                // Search robotData for the current junction
-                Junction junc = robotData.findJunction(robot.getLocation());
+                // Search robotPath for the current junction
+                Junction junc = robotPath.findJunction(robot.getLocation());
                 // return opposite direction to the heading when juctions was fist entered
 
                 //log junction
@@ -149,7 +152,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
 
                 // (For DepthFirst Efficiency) Move counter back to When
                 // all junction paths exhausted
-                this.robotData.setJuncCount(junc.getID());
+                this.robotPath.setJuncCount(junc.getID());
 
                 //
 
@@ -297,7 +300,8 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     // stops the controller
     public void reset() {
         active = false;
-        this.robotData.resetJuncCount();
+        // Set index (JuncCounter) to 0
+        this.robotPath.setJuncCount(0);
     }
 
 

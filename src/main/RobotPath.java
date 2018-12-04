@@ -2,7 +2,7 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
 //
-public class RobotData {
+public class RobotPath {
     // size of Junction array
     private static int maxJunctions = 900;
     // counter for current empty array index
@@ -10,14 +10,15 @@ public class RobotData {
     // Array for storing list of juctions visited
     private Junction[] junctionList = new Junction[maxJunctions];
 
-    // initialise RobotData object and set junction counter to 0
-    RobotData() {
-        resetJuncCount();
+    // initialise RobotPath object and set junction counter to 0
+    RobotPath() {
+        setJuncCount(0);
     }
 
-    // Reset junction Counter to 0
-    public void resetJuncCount() {
-        this.juncCount = 0;
+
+    // Set Array index (JuncCounter)
+    public void setJuncCount(int juncCount) {
+        this.juncCount = juncCount;
     }
 
     // return current juncCounter value
@@ -68,6 +69,15 @@ public class RobotData {
         printJunction(this.juncCount-1);
     }
 
+    public void printPath() {
+        // If no index specifed print most recent junction
+        System.out.println("\n\n\n\tFINAL PATH:\n");
+        for (int i=0 ; i < this.juncCount ; i++) {
+            printJunction(i);
+            System.out.println("");
+        }
+    }
+
     //Convert integer heading to string
     public static String headingToString(int dir) {
         switch(dir) {
@@ -87,6 +97,7 @@ public class RobotData {
     public static String positionToString(Point p) {
         return "("+p.x+","+p.y+")";
     }
+
 
 
 

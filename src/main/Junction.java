@@ -14,6 +14,9 @@ public class Junction {
     // initial heading when robot arrived at junction
     private int arrivalHeading;
 
+    // initial heading when robot LAST exited at junction
+    private int departureHeading = IRobot.CENTRE;
+
     //Constructs a Junction given a Point and Heading
     Junction(Point position, int arrivalHeading, int juncID) {
         this.juncID = juncID;

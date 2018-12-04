@@ -59,18 +59,21 @@ public final native void java.lang.Object.notifyAll()
 
 
 
-Headings:IRobot.NORTH -- 1000
+Headings:
+IRobot.NORTH -- 1000
 IRobot.EAST -- 1001
 IRobot.SOUTH -- 1002
 IRobot.WEST -- 1003
 
-DirectionsIRobot.AHEAD -- 2000
+Directions:
+IRobot.AHEAD -- 2000
 IRobot.RIGHT -- 2001
 IRobot.BEHIND -- 2002
 IRobot.LEFT -- 2003
 IRobot.CENTRE -- 2004
 
-DirectionsIRobot.WALL -- 3000
+SquareTypes:
+IRobot.WALL -- 3000
 IRobot.PASSAGE -- 3001
 IRobot.BEENBEFORE -- 4000
 

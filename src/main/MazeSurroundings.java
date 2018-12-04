@@ -1,6 +1,8 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
+//TODO[ !!! ] Fix probabilities
+
 // enum used as the 2 are constant and thier methods can be grouped together
 public class MazeSurroundings {
     // the robot in the maze

@@ -3,6 +3,9 @@ import static org.junit.Assert.*;
 import uk.ac.warwick.dcs.maze.logic.Maze;
 import uk.ac.warwick.dcs.maze.generators.PrimGenerator;
 import uk.ac.warwick.dcs.maze.logic.RobotImpl;
+import uk.ac.warwick.dcs.maze.gui.MazeApp;
+import uk.ac.warwick.dcs.maze.logic.MazeLogic;
+
 
 /*
     This class contains unit tests for the RandomController class.
