@@ -6,11 +6,11 @@ public class RobotData {
     // size of Junction array
     private static int maxJunctions = 900;
     // counter for current empty array index
-    private static int juncCount;
+    private int juncCount;
     // Array for storing list of juctions visited
     private Junction[] junctionList = new Junction[maxJunctions];
     // Stores string with the mode recent update to the database;
-    private String log;
+    private String log = "";
 
     // initialise RobotData object and set junction counter to 0
     RobotData() {
@@ -38,7 +38,7 @@ public class RobotData {
 
     //Adds juction to the Array and increments the counter
     public void addJunction(Point position, int arrivalHeading) {
-        this.junctionList[this.juncCount] = new Junction(position, arrivalHeading, this.juncCount);
+        this.junctionList[this.juncCount] = new Junction(this.juncCount, arrivalHeading, position);
         this.juncCount++;
     }
 
@@ -53,7 +53,7 @@ public class RobotData {
     // Search robotData list for a matching position (coordinates)
     // Returns the Junction object of
     public Junction getJunction(Point coordinates) {
-        for (int i=0; i < this.JuncCount; i++) {
+        for (int i=0; i < this.juncCount; i++) {
             if (this.junctionList[i].position.equals(coordinates)) return this.junctionList[i];
         }
         // If junction no match found,
@@ -75,15 +75,15 @@ public class RobotData {
     public void update(Point position, int arrivalHeading) {
         // Searches list for a juction in given location
         Junction junc = getJunction(position);
-        if (junc.index = -1) { // If juction NOT in list, //REVIEW
+        if (junc.index == -1) { // If juction NOT in list, //REVIEW
             addJunction(position, arrivalHeading);// Add it to the junctionList
             // Update the current log status
-            log =  "New Junction "     + this.junctionList[i].getIndex() /
-                    + " - Arrival: "   + headingToString(this.junctionList[i].getArrivalHeading())
-                    + " - "            + positionToString(this.junctionList[i].position);
+            log =  "New Junction "     + this.junctionList[this.juncCount-1].index
+                    + " - Arrival: "   + headingToString(this.junctionList[this.juncCount-1].getArrivalHeading())
+                    + " - "            + positionToString(this.junctionList[this.juncCount-1].position);
         } else { // If juction NOT in list,
             // Update the log to say report A juctions been REVISTED
-            log =   "Revisted Junction " + junc.getIndex()
+            log =   "Revisted Junction " + junc.index
                     + " - Arrival: " + headingToString(junc.getArrivalHeading())
                     + " - " + positionToString(junc.position);
 
@@ -93,7 +93,9 @@ public class RobotData {
 
 
     public String getLog() {
-        return log;
+        String copy = this.log;
+        this.log = "";
+        return copy;
     }
 
 
@@ -104,11 +106,11 @@ public class RobotData {
     //     System.out.print("Junction "+this.junctionList[i].getIndex()+" -- heading "+headingToString(this.junctionList[i].getArrivalHeading())+" -- "+positionToString(this.junctionList[i].position);
     // }
 
-
-    public void printJunction() {
-        //if no index specifed print most recent junction
-        printJunction(this.juncCount-1);
-    }
+    //
+    // public void printJunction() {
+    //     //if no index specifed print most recent junction
+    //     printJunction(this.juncCount-1);
+    // }
 
 
 

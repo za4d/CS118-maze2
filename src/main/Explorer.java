@@ -2,7 +2,7 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
 // TODO Go through commments (after major changed have been made)
-// TODO LOOK around method to group all the loops in dead end corridor ...
+// TODO LOOK around method to group all the loops in deadend corridor ...
 // QUESTION MAX number of steps
 // NOTE BEAUTIFY!!
 // [DONE]TODO test todo labels
@@ -35,18 +35,18 @@ public class Explorer implements IRobotController {
     // in the user interface
     public void start() {
         this.active = true;
-        //
+
         // Start robot on Exploring mode
         mode = Mode.Explore;
 
         // direction varible the robot will move toward in a given step
-        int direction = IRobot.CENTRE; // initialise as centre i.e. No Direction
+        int direction = IRobot.CENTRE;
 
-        // Make sure robot doesnt start at a dead dead,
-        // else it will start backtracking with no junctions
-        robot.face(deadEnd());
-        robot.advance();
-        if (delay > 0) robot.sleep(delay*2);
+        // // Make sure robot doesnt start at a dead dead,
+        // // else it will start backtracking with no junctions (gets stuck)
+        // robot.face(deadEnd());
+        // robot.advance();
+        // if (delay > 0) robot.sleep(delay*2);
         //NOTE remove Info
         // Info.all();
 
@@ -64,14 +64,15 @@ public class Explorer implements IRobotController {
             // System.out.print(" ("+robot.getLocation().x+","+robot.getLocation().y+")\t");//TEMP
             // System.out.print(mode.isExploring()+"\t");//TEMP
 
-            // if (mode.isExploring()) {
-            //     direction = exploreControl();
-            // }  else {
-            //     direction = backtrackControl();
-            // }
+            if (mode.isExploring()) {
+                direction = exploreControl();
+            }  else {
+                direction = backtrackControl();
+            }
 
             //NOTE Reset Delay to normal
             // wait for a while if we are supposed to
+
             if (delay > 0)  robot.sleep(delay*2);
 
             // //TODO delay BEFORE logging
@@ -150,6 +151,9 @@ public class Explorer implements IRobotController {
             // //TEMP
             // System.out.print("\t* Revisted -- Junction "+junc.getIndex()+" -- Returning "+headingToString(reverseHeading(junc.getArrivalHeading())));//heading "+headingToString(junc.getArrivalHeading())+" -- "+junc.position.toString());
             // System.out.print("\t* Revisted -- Junction "+junc.getIndex()+" -- Arrival: "+headingToString(junc.getArrivalHeading())+" -- "+junc.position.toString());
+
+            robotData.update( robot.getLocation() , robot.getHeading() );
+
 
             robot.setHeading(reverseHeading(junc.getArrivalHeading()));
             return IRobot.AHEAD;
@@ -270,42 +274,24 @@ public class Explorer implements IRobotController {
     }
 
 
-    private int logStep(int direction){
+    private void logStep(int direction){
         /*
         - position
         - Mode
         - Heading (Not r_dir!)
         - Junction changes
         */
-        //TEMP Try space
-
         // String format = "%-40s%s%n";
         // System.out.printf(format, var1, var1);
-        String format = " %-60s %-40s %-20s %s%n";
-
-
-        // print current position
+        String format = " %-10s %-10s %-10s %s%n";
+        // log current position
         String pos = "("+robot.getLocation().x+","+robot.getLocation().y+")";
+        // log current position
         String mod = mode.name();
         String dir = directionToString(direction);
         String log = robotData.getLog();
-
         //Print the step
         System.out.printf(format, pos, mod, dir, log);
-        // //
-        // System.out.print(mode.name()+"\t");//TEMP
-        //
-        // System.out.print(mode.isExploring()+"\t");//TEMP
-        //
-        // System.out.print(directionToString(direction)+"\t");//TEMP
-        //
-        // robotData.printJunction();
-        //
-        // //TEMP
-        // System.out.print("\t* Revisted -- Junction "+junc.getIndex()+" -- Returning "+headingToString(reverseHeading(junc.getArrivalHeading())));//heading "+headingToString(junc.getArrivalHeading())+" -- "+junc.position.toString());
-        // System.out.print("\t* Revisted -- Junction "+junc.getIndex()+" -- Arrival: "+headingToString(junc.getArrivalHeading())+" -- "+junc.position.toString());
-        //
-
     }
 
 

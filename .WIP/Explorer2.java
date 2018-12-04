@@ -3,11 +3,11 @@ import java.awt.Point;
 
 
 /*
-    Task 2.2 (Depth First):
-     - Renamed Junction Store (robotData) to be path store (robotPath)
-     - When backtracking through a junction, array counter moved to junction position
-     To improve my junction storge method, all junctions that: completly explored
-     and lead to dead ends are discarded and only the current path being searched is stored.
+Task 2.2 (Depth First):
+- Renamed Junction Store (robotData) to be path store (robotPath)
+- When backtracking through a junction, array counter moved to junction position
+To improve my junction storge method, all junctions that: completly explored
+and lead to dead ends are discarded and only the current path being searched is stored.
 
 */
 // TODO Implement tests for exploerer 2 and 3
@@ -67,9 +67,9 @@ public class Explorer2 implements IRobotController {
         System.out.println("POS\tEXPLR\tDIR\t\n");
         while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
 
-//REVIEW remove log Print or make cleaner method
-System.out.print(" ("+robot.getLocation().x+","+robot.getLocation().y+")\t");//TEMP
-System.out.print(mode.isExploring()+"\t");//TEMP
+            //REVIEW remove log Print or make cleaner method
+            System.out.print(" ("+robot.getLocation().x+","+robot.getLocation().y+")\t");//TEMP
+            System.out.print(mode.isExploring()+"\t");//TEMP
 
             if (mode.isExploring()) {
                 direction = exploreControl();
@@ -78,7 +78,7 @@ System.out.print(mode.isExploring()+"\t");//TEMP
                 direction = backtrackControl();
             }
 
-System.out.print(directionToString(direction)+"\t");//TEMP
+            System.out.print(directionToString(direction)+"\t");//TEMP
 
             robot.face(direction);
             robot.advance();
@@ -86,7 +86,7 @@ System.out.print(directionToString(direction)+"\t");//TEMP
             //NOTE Reset Delay to normal
             // wait for a while if we are supposed to
             if (delay > 0)
-                robot.sleep(delay*2);
+            robot.sleep(delay*2);
         }
     }
 
@@ -100,30 +100,30 @@ System.out.print(directionToString(direction)+"\t");//TEMP
         // Count number of (Non Wall) Exits
         switch (lookAllAround.countExits()) {
             case 1:
-                return deadEnd();
+            return deadEnd();
             case 2:
-                return corridor();
+            return corridor();
             case 3:
             case 4:
-                // When the robot is at a junction or corridor,
-                // Search robotPath for a junction in current position
-                Junction junc = robotPath.findJunction(robot.getLocation());
+            // When the robot is at a junction or corridor,
+            // Search robotPath for a junction in current position
+            Junction junc = robotPath.findJunction(robot.getLocation());
 
-                // If returned junction ID (array index) is -1 then junction not in array...
-                if (junc.getID() == -1)
-                    robotPath.addJunction(robot.getLocation(), robot.getHeading());//...so add junction to array
+            // If returned junction ID (array index) is -1 then junction not in array...
+            if (junc.getID() == -1)
+            robotPath.addJunction(robot.getLocation(), robot.getHeading());//...so add junction to array
 
-                // Manual check for if junctions are correctly recorded
-                robotPath.printJunction();
+            // Manual check for if junctions are correctly recorded
+            robotPath.printJunction();
 
-                return crossroad();
+            return crossroad();
             default:
-                return IRobot.CENTRE;
+            return IRobot.CENTRE;
         }
     }
 
 
-//TODO Cleanup passage exits test an non walls test
+    //TODO Cleanup passage exits test an non walls test
     // BACKTRACK CONTROLLER
     public int backtrackControl() {
 
@@ -138,30 +138,30 @@ System.out.print(directionToString(direction)+"\t");//TEMP
         // Count number of (Non Wall) Exits
         switch (lookAllAround.countExits()) {
             case 1:
-                return deadEnd();
+            return deadEnd();
             case 2:
-                return corridor();
+            return corridor();
             case 3:
             case 4:
-                // When the robot is at a junction or corridor,
-                // Search robotPath for the current junction
-                Junction junc = robotPath.findJunction(robot.getLocation());
-                // return opposite direction to the heading when juctions was fist entered
+            // When the robot is at a junction or corridor,
+            // Search robotPath for the current junction
+            Junction junc = robotPath.findJunction(robot.getLocation());
+            // return opposite direction to the heading when juctions was fist entered
 
-                //log junction
-                System.out.print("\t* Revisted -- Junction "+junc.getID()+" -- Returning "+headingToString(reverseHeading(junc.getArrivalHeading())));//heading "+headingToString(junc.getArrivalHeading())+" -- "+junc.position.toString());
+            //log junction
+            System.out.print("\t* Revisted -- Junction "+junc.getID()+" -- Returning "+headingToString(reverseHeading(junc.getArrivalHeading())));//heading "+headingToString(junc.getArrivalHeading())+" -- "+junc.position.toString());
 
-                // (For DepthFirst Efficiency) Move counter back to When
-                // all junction paths exhausted
-                this.robotPath.setJuncCount(junc.getID());
+            // (For DepthFirst Efficiency) Move counter back to When
+            // all junction paths exhausted
+            this.robotPath.setJuncCount(junc.getID());
 
-                //
+            //
 
-                robot.setHeading(reverseHeading(junc.getArrivalHeading()));
-                return IRobot.AHEAD;
+            robot.setHeading(reverseHeading(junc.getArrivalHeading()));
+            return IRobot.AHEAD;
 
             default:
-                return IRobot.CENTRE;
+            return IRobot.CENTRE;
         }
     }
 
@@ -169,17 +169,17 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     public int reverseHeading(int heading) {
         switch(heading) {
             case IRobot.NORTH:
-                return IRobot.SOUTH;
+            return IRobot.SOUTH;
             case IRobot.EAST:
-                return IRobot.WEST;
+            return IRobot.WEST;
             case IRobot.SOUTH:
-                return IRobot.NORTH;
+            return IRobot.NORTH;
             case IRobot.WEST:
-                return IRobot.EAST;
+            return IRobot.EAST;
             default:
             //NOTE Delete print?
-                System.out.print("reverseHeading(Invalid Argument)");
-                return IRobot.CENTRE;
+            System.out.print("reverseHeading(Invalid Argument)");
+            return IRobot.CENTRE;
         }
     }
 
@@ -187,15 +187,15 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     public static String headingToString(int dir) {
         switch(dir) {
             case IRobot.NORTH:
-                return "North";
+            return "North";
             case IRobot.EAST:
-                return "East";
+            return "East";
             case IRobot.SOUTH:
-                return "South";
+            return "South";
             case IRobot.WEST:
-                return "West";
+            return "West";
             default:
-                return "ERR";
+            return "ERR";
         }
     }
 
@@ -203,15 +203,15 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     public static String directionToString(int dir) {
         switch(dir) {
             case IRobot.AHEAD:
-                return "AHEAD";
+            return "AHEAD";
             case IRobot.RIGHT:
-                return "RIGHT";
+            return "RIGHT";
             case IRobot.BEHIND:
-                return "BEHIND";
+            return "BEHIND";
             case IRobot.LEFT:
-                return "LEFT";
+            return "LEFT";
             default:
-                return "ERR";
+            return "ERR";
         }
     }
 
@@ -226,8 +226,8 @@ System.out.print(directionToString(direction)+"\t");//TEMP
 
     /* DEADEND: number of Exits = 1 (back the way you came)
     e.g.    #   #
-            # V #
-            # # #
+    # V #
+    # # #
 
     Assumes there only 1 non wall (its a dead end) and returns the direction that exit. */
     public int deadEnd() {
@@ -238,8 +238,8 @@ System.out.print(directionToString(direction)+"\t");//TEMP
 
     /* CORRIDOR: number of Exits is 2
     e.g.    #   #
-              V #
-            # # #
+    V #
+    # # #
 
     There 2 exit and 1 is BEHIND you (which you shouldnt take),
     therefore we search the remaining 3 directions for the exit that isnt backtracking. */
@@ -251,15 +251,15 @@ System.out.print(directionToString(direction)+"\t");//TEMP
     //REVIEW (COMBINE EXPLANATIONS)Combine junction and crossroads?
     /* JUNCTION: number of Exits is 3
     e.g.    #   #
-              V
-            # # #
+    V
+    # # #
 
     First we look for a route that we havent taken before,
     Else if there isnt any we randomly choose from the others.*/
     /* CROSSROADS: number of Exits is 4
     e.g.    #   #
-              V
-            #   #
+    V
+    #   #
 
     Junction and Crossroad code are the same and therfore are combined*/
     public int crossroad() {

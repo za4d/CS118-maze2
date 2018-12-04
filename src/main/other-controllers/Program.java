@@ -10,12 +10,12 @@ public class Program {
         // initialise the maze configuration and add an instance of
         // the random robot controller
 		MazeLogic logic = new MazeLogic();
+        logic.getControllerPool().addController(new Info());
         logic.getControllerPool().addController(new RandomController());
         logic.getControllerPool().addController(new HomingController());
         logic.getControllerPool().addController(new Explorer());
         // logic.getControllerPool().addController(new Explorer2());
         // logic.getControllerPool().addController(new Explorer3());
-        logic.getControllerPool().addController(new Info());
         // logic.getControllerPool().addController(new GrandFinale());
 
         // run the maze

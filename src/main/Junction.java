@@ -7,14 +7,15 @@ import java.awt.Point;
 
 //
 public class Junction {
+    //REVIEW Why is it PUBLIC
     // index number of junction
-    private final int index;
+    public final int index;
 
     // Coordinate of junction in a point object
-    protected final Point position;
+    public final Point position;
 
     // initial heading when robot arrived at junction
-    private final int arrivalHeading;
+    public final int arrivalHeading;
 
     // initial heading when robot LAST exited at junction
     private int departureHeading = IRobot.CENTRE;
