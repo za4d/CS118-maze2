@@ -2,10 +2,11 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 import java.util.Stack;//TEMP
 
-// TODO Implement tests for exploerer 2 and 3
+// TODO Implement tests for explorer 2 and 3
 // NOTE Improve Depth First junction store efficiency
 // NOTE Labal Tasks
 // TODO Remove TEMP!
+
 /*
  * Task 2.2 (Depth First):
  * - Extended the Array type Junction Store (RobotData) to be a Stack type path store (Recorder)
@@ -21,6 +22,9 @@ public class Explorer2 implements IRobotController {
   // a flag to indicate whether we are looking for a path
   private boolean active = false;
 
+  // logging active flag
+  private boolean logging = true; // REVIEW Make loggers false
+
   // a value (in ms) indicating how long we should wait between moves
   private int delay;
 
@@ -35,9 +39,15 @@ public class Explorer2 implements IRobotController {
   // Mode Constants
   private Mode mode;
   enum Mode {
-    Explore, BackTrack;
-  }
+    Explore(true), BackTrack(false);
 
+    public boolean isExploring;
+
+    Mode(boolean isExploring) {
+      this.isExploring = isExploring;
+    }
+
+  }
 
   /*
    * This method is called when the "start" button is clicked
@@ -56,10 +66,10 @@ public class Explorer2 implements IRobotController {
     }
 
     // direction varible the robot will move toward in a given step
-    int direction = exploreControl();
+    int direction = crossroad();
 
     // adds starting point as as first junction (direction is reverse)
-    robot.face(direction);
+    robot.face(crossroad());
     robotData.addJunction(robot.getLocation(), reverseHeading(robot.getHeading()));
     robot.advance(); // take first step
 
@@ -81,17 +91,17 @@ public class Explorer2 implements IRobotController {
 
           // Then set direction according to mode.
           // if Exploring use exploreControl, else use backtrackControl
-          direction = (mode.name() == "Explorer2")? exploreControl() : backtrackControl();
+          direction = (mode.isExploring)? exploreControl() : backtrackControl();
           break;
         }
 
       // Wait
       if (delay > 0)
-        robot.sleep(delay*2); // FIXME
+        robot.sleep(delay); // FIXME
 
       // Log Explorer State
       // (Position, Mode, Directions and any reports from Junction data store)
-      // logStep(direction);//TODO uncomment
+      logStep(direction);
 
       // take a step
       robot.face(direction);
@@ -162,6 +172,8 @@ public class Explorer2 implements IRobotController {
     Finds the 1 possible exit.
   */
   public int deadEnd() {
+    // Set mode to BackTrack
+    mode = Mode.BackTrack;
     // returns direction of the (single) Non Wall exit to go back down
     return lookAllAround.nextRandomExit();
   }
@@ -201,21 +213,23 @@ public class Explorer2 implements IRobotController {
 
 
   private void logStep(int direction) {
-    // get current position
-    String pos = "("+robot.getLocation().x+","+robot.getLocation().y+")";
-    // get current mode
-    String mod = mode.name();
-    // get current Directions
-    String dir = directionToString(direction);
-    // get any junction array reports
-    String log = robotData.log;
-    //clear log
-    robotData.log = "";
+    if (this.logging) {
+      // get current position
+      String pos = "("+robot.getLocation().x+","+robot.getLocation().y+")";
+      // get current mode
+      String mod = mode.name();
+      // get current Directions
+      String dir = directionToString(direction);
+      // get any junction array reports
+      String log = robotData.log;
+      //clear log
+      robotData.log = "";
 
-    // Set Table format for Log
-    String format = " %-10s %-10s %-10s %s%n";
-    // print to terminal
-    System.out.printf(format, pos, mod, dir, log);
+      // Set Table format for Log
+      String format = " %-10s %-10s %-10s %s%n";
+      // print to terminal
+      System.out.printf(format, pos, mod, dir, log);
+    }
   }
 
 

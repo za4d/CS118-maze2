@@ -2,7 +2,7 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
 //QUESTION Single loop double loop
-//REVIEW Update after other Exploerers Clea`ned
+//REVIEW Update after other explorer Clea`ned
 /*
     TASK 2.3 (Loopy):
      - If Explorer mode returns direction that has a BEENBEFORE tile

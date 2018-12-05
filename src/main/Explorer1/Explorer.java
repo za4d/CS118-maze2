@@ -16,6 +16,9 @@ public class Explorer implements IRobotController {
   // a flag to indicate whether we are looking for a path
   private boolean active = false;
 
+  // logging active flag
+  private boolean logging = false;
+
   // a value (in ms) indicating how long we should wait between moves
   private int delay;
 
@@ -29,7 +32,14 @@ public class Explorer implements IRobotController {
   // Mode Constants
   private Mode mode;
   enum Mode {
-    Explore, BackTrack;
+    Explore(true), BackTrack(false);
+
+    public boolean isExploring;
+
+    Mode(boolean isExploring) {
+      this.isExploring = isExploring;
+    }
+
   }
 
 // BUG FIX start stuck bug see test play ground
@@ -52,7 +62,7 @@ public class Explorer implements IRobotController {
     }
 
     // direction varible the robot will move toward in a given step
-    int direction = exploreControl();
+    int direction = IRobot.CENTRE;
 
     // adds starting point as as first junction (direction is reverse)
     robotData.addJunction(robot.getLocation(), IRobot.CENTRE);
@@ -75,7 +85,7 @@ public class Explorer implements IRobotController {
 
           // Then set direction according to mode.
           // if Exploring use exploreControl, else use backtrackControl
-          direction = (mode.name() == "Explore")? exploreControl() : backtrackControl();
+          direction = (mode.isExploring)? exploreControl() : backtrackControl();
           break;
         }
 
@@ -150,6 +160,8 @@ public class Explorer implements IRobotController {
     Finds the 1 possible exit.
   */
   public int deadEnd() {
+    // Set mode to BackTrack
+    mode = Mode.BackTrack;
     // returns direction of the (single) Non Wall exit to go back down
     return lookAllAround.nextRandomExit();
   }
@@ -189,19 +201,23 @@ public class Explorer implements IRobotController {
 
 
   private void logStep(int direction) {
-    // get current position
-    String pos = "("+robot.getLocation().x+","+robot.getLocation().y+")";
-    // get current mode
-    String mod = mode.name();
-    // get current Directions
-    String dir = directionToString(direction);
-    // get any junction array reports
-    String log = robotData.log;
+    if (this.logging) {
+      // get current position
+      String pos = "("+robot.getLocation().x+","+robot.getLocation().y+")";
+      // get current mode
+      String mod = mode.name();
+      // get current Directions
+      String dir = directionToString(direction);
+      // get any junction array reports
+      String log = robotData.log;
+      //clear log
+      robotData.log = "";
 
-    // Set Table format for Log
-    String format = " %-10s %-10s %-10s %s%n";
-    // print to terminal
-    System.out.printf(format, pos, mod, dir, log);
+      // Set Table format for Log
+      String format = " %-10s %-10s %-10s %s%n";
+      // print to terminal
+      System.out.printf(format, pos, mod, dir, log);
+    }
   }
 
 
