@@ -9,11 +9,12 @@ public class RobotData {
   // counter for current empty array index
   private int juncCount;
   // array for storing list of juctions visited
-  private Junction[] junctionList = new Junction[900];
+  private Junction[] junctionList;
 
   // initialise RobotData object and set junction counter to 0
   RobotData() {
     this.juncCount = 0;
+    this.junctionList = new Junction[900];
   }
 
   // // Reset junction Counter to 0

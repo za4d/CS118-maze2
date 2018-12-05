@@ -175,7 +175,7 @@ public class Info  implements IRobotController {
         }
 
         public static void flag(String str) {
-          System.out.print("\n"+str+"\n");
+          System.out.print("\n\n"+str+"\n\n");
         }
 
 

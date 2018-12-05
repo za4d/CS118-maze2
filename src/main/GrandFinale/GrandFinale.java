@@ -1,21 +1,15 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
-import java.util.Stack;//TEMP
 
-// TODO Implement tests for explorer 2 and 3
-// NOTE Improve Depth First junction store efficiency
-// NOTE Labal Tasks
-// TODO Remove TEMP!
+// QUESTION MAX number of steps
+// [done] TODO Go through commments (after major changed have been made)
+// [done] TODO LOOK around method to group all the loops in deadend corridor ...
+// NOTE BEAUTIFY!!
+// [done] TODO test todo labels
 
-/*
- * Task 2.2 (Depth First):
- * - Extended the Array type Junction Store (RobotData) to be a Stack type path store (Recorder)
- * - When in backtracking mode and `exausted junction` through a junction, array counter moved to junction position
- * To improve my junction storge method, all junctions that: completly explored
- * and lead to dead ends are discarded and only the current path being searched is stored.
- */
+// [done] REVIEW: Fix tab from 4 to 8
 
-public class Explorer2 implements IRobotController {
+public class GrandFinale implements IRobotController {
   // the robot in the maze
   private IRobot robot;
 
@@ -23,18 +17,17 @@ public class Explorer2 implements IRobotController {
   private boolean active = false;
 
   // logging active flag
-  private boolean logging = true; // REVIEW Make loggers false
+  private boolean logging = false;
 
   // a value (in ms) indicating how long we should wait between moves
   private int delay;
 
-  // Recorder (RobotData) creates and stores
-  // the info on the junctions the robot encounters
-  private Recorder robotData;
+  // RobotData to create and store the data on the junctions the robot encounters
+  private RobotData robotData;
 
-  // Observer concerns current state of the maze in the given directions
-  private Observer lookAllAround; // (All directions)
-  private Observer lookForwards; // (All directions EXCLUDING BEHIND)
+  // GrandObserver concerns current state of the maze in the given directions
+  private GrandObserver lookAllAround; // (All directions)
+  private GrandObserver lookForwards; // (All directions EXCLUDING BEHIND)
 
   // Mode Constants
   private Mode mode;
@@ -49,6 +42,9 @@ public class Explorer2 implements IRobotController {
 
   }
 
+// BUG FIX start stuck bug see test play ground
+
+
   /*
    * This method is called when the "start" button is clicked
    */
@@ -62,15 +58,14 @@ public class Explorer2 implements IRobotController {
     // - Reset Junction Array to 0,
     // - Clears terminal and print logger headings
     if (robot.getRuns() == 0) {
-      this.robotData = new Recorder();
+      this.robotData = new RobotData();
     }
 
     // direction varible the robot will move toward in a given step
-    int direction = deadEnd();
+    int direction = IRobot.CENTRE;
 
     // adds starting point as as first junction (direction is reverse)
-    robot.face(crossroad());
-    robotData.addJunction(robot.getLocation(), reverseHeading(robot.getHeading()));
+    robotData.addJunction(robot.getLocation(), IRobot.CENTRE);
 
     // Until the robot reaches the Goal ...
     while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
@@ -96,7 +91,9 @@ public class Explorer2 implements IRobotController {
 
       // Wait
       if (delay > 0)
-        robot.sleep(delay); // FIXME
+        robot.sleep(delay);
+
+      //[done] REVIEW Explain how it prints everything
 
       // Log Explorer State
       // (Position, Mode, Directions and any reports from Junction data store)
@@ -106,16 +103,6 @@ public class Explorer2 implements IRobotController {
       robot.face(direction);
       robot.advance();
     }
-
-    //TEMP
-    Stack<Junction> list = robotData.getList();
-    while (!list.empty()) {
-    Junction junc = list.pop();
-    System.out.println("Junction " + junc.index
-    + " - Arrival: " + Explorer.headingToString(junc.arrivalHeading)
-    + " - " + Explorer.locationToString(junc.location));
-    }
-    //TEMP
   }
 
 
@@ -134,6 +121,10 @@ public class Explorer2 implements IRobotController {
   }
 
 
+
+  //TODO[done]  Cleanup passage exits test an non walls test
+
+
   /*
    * Back-Tracking Mode Controller
    */
@@ -144,17 +135,15 @@ public class Explorer2 implements IRobotController {
       return exploreControl();
     }
 
-    //remove backtracked junction from list
-
-
-    // 'Pops' top juction off stack
-    Junction junc = robotData.removeJunction();
+    // Search get current junction from robotData
+    Junction junc = robotData.getJunction(robot.getLocation());
 
     // Else exit junction from where you first entered it
     robot.setHeading(reverseHeading(junc.arrivalHeading));
     return IRobot.AHEAD;
   }
 
+  //REVIEW[done]  Fix comments for direction array changes
   //NOTE methods are public to allow gradle tests
 
   // returns a number indicating how many non-wall exits there
@@ -203,7 +192,7 @@ public class Explorer2 implements IRobotController {
     return lookForwards.nextRandomExit();
   }
 
-  // REVIEW uneccesery
+
   public int nonwallExits() {
     return lookAllAround.countExits();
   }
@@ -233,15 +222,16 @@ public class Explorer2 implements IRobotController {
   /*
    * Static Methods
    */
+
   // Returns opposite heading
   public static int reverseHeading(int heading) {
     switch(heading) {
       case IRobot.NORTH:
         return IRobot.SOUTH;
-        case IRobot.SOUTH:
-        return IRobot.NORTH;
       case IRobot.EAST:
         return IRobot.WEST;
+      case IRobot.SOUTH:
+        return IRobot.NORTH;
       case IRobot.WEST:
         return IRobot.EAST;
       default:
@@ -282,17 +272,15 @@ public class Explorer2 implements IRobotController {
     }
   }
 
-  // Seperates new Run and Prints Log headings
-  public static void resetLog() {
-    System.out.println(
-      "\n\n\n\n\n "
-    + "Explorer Log:" + "\n "
-    + "POSTN" + "\t" + "EXPLR" + "\t" + "DIRC" + "\t" +"DATA LOG" + "\n");
+  // Converts point to reader friendly coordinates
+  public static String locationToString(Point p) {
+    return "("+p.x+","+p.y+")";
   }
 
   /*
    * Default Methods
    */
+
   // this method returns a description of this controller
   public String getDescription() {
     return "A controller which explores the maze in a structured way";
@@ -328,16 +316,18 @@ public class Explorer2 implements IRobotController {
   // sets the reference to the robot
   public void setRobot(IRobot robot) {
     this.robot = robot;
-    //also initialse Observer objects
-    this.lookAllAround = new Observer(this.robot, new int[]{ IRobot.AHEAD,
+    //also initialse GrandObserver objects
+    this.lookAllAround = new GrandObserver(this.robot, new int[]{ IRobot.AHEAD,
                                                               IRobot.LEFT,
                                                               IRobot.RIGHT,
                                                               IRobot.BEHIND });
 
-     this.lookForwards = new Observer(this.robot, new int[]{ IRobot.AHEAD,
+     this.lookForwards = new GrandObserver(this.robot, new int[]{ IRobot.AHEAD,
                                                               IRobot.LEFT,
                                                               IRobot.RIGHT });
 
   }
+
+
 
 }

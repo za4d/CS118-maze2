@@ -2,20 +2,24 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 import java.util.Stack;//TEMP
 
+
+
 // TODO Implement tests for explorer 2 and 3
-// NOTE Improve Depth First junction store efficiency
-// NOTE Labal Tasks
 // TODO Remove TEMP!
 
-/*
- * Task 2.2 (Depth First):
- * - Extended the Array type Junction Store (RobotData) to be a Stack type path store (Recorder)
- * - When in backtracking mode and `exausted junction` through a junction, array counter moved to junction position
- * To improve my junction storge method, all junctions that: completly explored
- * and lead to dead ends are discarded and only the current path being searched is stored.
- */
+//QUESTION Single loop double loop
+//REVIEW Update after other explorer Cleanned
 
-public class Explorer2 implements IRobotController {
+ /*
+  * TASK 2.3 (Loopy):
+  *   - If Explorer mode returns direction that has a BEENBEFORE tile
+  *   - Turn around and backrack
+  *  When the robots path is about to form a loop
+  *  (In explorer mode and junction ahead), reverse direction.
+  *  In affect its like the loop is cut as the BEENBEFORE "blocks" the robot
+  */
+
+public class Explorer3 implements IRobotController {
   // the robot in the maze
   private IRobot robot;
 
@@ -90,7 +94,12 @@ public class Explorer2 implements IRobotController {
 
           // Then set direction according to mode.
           // if Exploring use exploreControl, else use backtrackControl
-          direction = (mode.isExploring)? exploreControl() : backtrackControl();
+          if (mode.isExploring) {
+              direction = exploreControl();
+              if (robot.look(direction) == IRobot.BEENBEFORE) direction = IRobot.BEHIND;
+          }  else {
+              direction = backtrackControl();
+          }
           break;
         }
 

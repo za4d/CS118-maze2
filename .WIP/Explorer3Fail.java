@@ -2,20 +2,24 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 import java.util.Stack;//TEMP
 
+
+
 // TODO Implement tests for explorer 2 and 3
-// NOTE Improve Depth First junction store efficiency
-// NOTE Labal Tasks
 // TODO Remove TEMP!
 
-/*
- * Task 2.2 (Depth First):
- * - Extended the Array type Junction Store (RobotData) to be a Stack type path store (Recorder)
- * - When in backtracking mode and `exausted junction` through a junction, array counter moved to junction position
- * To improve my junction storge method, all junctions that: completly explored
- * and lead to dead ends are discarded and only the current path being searched is stored.
- */
+//QUESTION Single loop double loop
+//REVIEW Update after other explorer Cleanned
 
-public class Explorer2 implements IRobotController {
+ /*
+  * TASK 2.3 (Loopy):
+  *   - If Explorer mode returns direction that has a BEENBEFORE tile
+  *   - Turn around and backrack
+  *  When the robots path is about to form a loop
+  *  (In explorer mode and junction ahead), reverse direction.
+  *  In affect its like the loop is cut as the BEENBEFORE "blocks" the robot
+  */
+
+public class Explorer3 implements IRobotController {
   // the robot in the maze
   private IRobot robot;
 
@@ -23,7 +27,7 @@ public class Explorer2 implements IRobotController {
   private boolean active = false;
 
   // logging active flag
-  private boolean logging = true; // REVIEW Make loggers false
+  private boolean logging = true;
 
   // a value (in ms) indicating how long we should wait between moves
   private int delay;
@@ -49,6 +53,7 @@ public class Explorer2 implements IRobotController {
 
   }
 
+
   /*
    * This method is called when the "start" button is clicked
    */
@@ -62,15 +67,16 @@ public class Explorer2 implements IRobotController {
     // - Reset Junction Array to 0,
     // - Clears terminal and print logger headings
     if (robot.getRuns() == 0) {
-      this.robotData = new Recorder();
+      this.robotData = new Robot();
     }
 
     // direction varible the robot will move toward in a given step
-    int direction = deadEnd();
+    int direction = exploreControl();
 
     // adds starting point as as first junction (direction is reverse)
-    robot.face(crossroad());
+    robot.face(direction);
     robotData.addJunction(robot.getLocation(), reverseHeading(robot.getHeading()));
+    robot.advance(); // take first step
 
     // Until the robot reaches the Goal ...
     while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
@@ -94,9 +100,10 @@ public class Explorer2 implements IRobotController {
           break;
         }
 
+
       // Wait
       if (delay > 0)
-        robot.sleep(delay); // FIXME
+        robot.sleep(delay);
 
       // Log Explorer State
       // (Position, Mode, Directions and any reports from Junction data store)
@@ -120,16 +127,31 @@ public class Explorer2 implements IRobotController {
 
 
 
+  // /*
+  //  * Exploring Mode Controller
+  //  */
+  // public int exploreControl() {
+  //   // If there's NO 'Unexplored' Passage, switch to BackTrack mode
+  //   if (!lookAllAround.isThereA(IRobot.PASSAGE)) {
+  //     mode = Mode.BackTrack;
+  //     // LOOPY !!!
+  //     return IRobot.BEHIND;
+  //   }
+  //   // Else compute and return appropriate direction
+  //   return crossroad();
+  // }
+
+
   /*
    * Exploring Mode Controller
    */
   public int exploreControl() {
     // If there's NO 'Unexplored' Passage, switch to BackTrack mode
     if (!lookAllAround.isThereA(IRobot.PASSAGE)) {
-      mode = Mode.BackTrack;
-      return backtrackControl();
+      mode = Mode.BackTrack;  Info.flag();//TEMP
+      // LOOPY !!!
+      return IRobot.BEHIND;
     }
-    // Else compute and return appropriate direction
     return crossroad();
   }
 
@@ -171,6 +193,8 @@ public class Explorer2 implements IRobotController {
     Finds the 1 possible exit.
   */
   public int deadEnd() {
+    // Set mode to BackTrack
+    mode = Mode.BackTrack;
     // returns direction of the (single) Non Wall exit to go back down
     return lookAllAround.nextRandomExit();
   }

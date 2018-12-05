@@ -160,8 +160,6 @@ public class Explorer implements IRobotController {
     Finds the 1 possible exit.
   */
   public int deadEnd() {
-    // Set mode to BackTrack
-    mode = Mode.BackTrack;
     // returns direction of the (single) Non Wall exit to go back down
     return lookAllAround.nextRandomExit();
   }

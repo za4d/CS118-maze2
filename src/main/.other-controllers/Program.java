@@ -16,7 +16,7 @@ public class Program {
         logic.getControllerPool().addController(new Explorer());
         logic.getControllerPool().addController(new Explorer2());
         logic.getControllerPool().addController(new Explorer3());
-        // logic.getControllerPool().addController(new GrandFinale());
+        logic.getControllerPool().addController(new GrandFinale());
 
         // run the maze
 		new MazeApp(logic);
