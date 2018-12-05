@@ -26,10 +26,10 @@ public class GrandFinale implements IRobotController {
     private Mode mode;
 
     // All directions
-    private MazeSurroundings lookAllAround;
+    private MazeSate lookAllAround;
 
     // All directions Excluding BEHIND
-    private MazeSurroundings lookForwards;
+    private MazeSate lookForwards;
 
     // this method is called when the "start" button is clicked
     // in the user interface
@@ -308,9 +308,9 @@ robot.setLocation(new Point(1,1));//TEMP
     // sets the reference to the robot
     public void setRobot(IRobot robot) {
         this.robot = robot;
-        //also initialse MazeSurroundings objects
-        this.lookAllAround = new MazeSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND});
-        this.lookForwards = new MazeSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT});
+        //also initialse MazeSate objects
+        this.lookAllAround = new MazeSate(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND});
+        this.lookForwards = new MazeSate(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT});
     }
 
 

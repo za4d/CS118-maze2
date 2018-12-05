@@ -31,10 +31,10 @@ public class Explorer2 implements IRobotController {
     private Mode mode;
 
     // All directions
-    private MazeSurroundings lookAllAround;
+    private MazeSate lookAllAround;
 
     // All directions Excluding BEHIND
-    private MazeSurroundings lookForwards;
+    private MazeSate lookForwards;
 
     // this method is called when the "start" button is clicked
     // in the user interface
@@ -51,7 +51,11 @@ public class Explorer2 implements IRobotController {
         // else it will start backtracking with no junctions
         robot.face(deadEnd());
         robot.advance();
-        if (delay > 0) robot.sleep(delay*2);
+
+        if (delay > 0) {
+            robot.sleep(delay*2);
+        }
+
         //NOTE remove Info
         // Info.all();
 
@@ -74,6 +78,7 @@ public class Explorer2 implements IRobotController {
             if (mode.isExploring()) {
                 direction = exploreControl();
                 if (robot.look(direction) == IRobot.BEENBEFORE);
+                    //TODO
             }  else {
                 direction = backtrackControl();
             }
@@ -310,9 +315,15 @@ public class Explorer2 implements IRobotController {
     // sets the reference to the robot
     public void setRobot(IRobot robot) {
         this.robot = robot;
-        //also initialse MazeSurroundings objects
-        this.lookAllAround = new MazeSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND});
-        this.lookForwards = new MazeSurroundings(this.robot, new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT});
+        //also initialse MazeSate objects
+        this.lookAllAround = new MazeSate(this.robot, new int[]{IRobot.AHEAD,
+                                                                        IRobot.LEFT,
+                                                                        IRobot.RIGHT,
+                                                                        IRobot.BEHIND });
+
+        this.lookForwards = new MazeSate(this.robot, new new int[]{ IRobot.AHEAD,
+                                                                            IRobot.LEFT,
+                                                                            IRobot.RIGHT });
     }
 
 
