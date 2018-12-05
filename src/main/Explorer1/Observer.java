@@ -4,8 +4,8 @@ import java.awt.Point;
 //TODO Fix probabilities
 
 // enum used as the 2 are constant and thier methods can be grouped together
-//REVIEW MazeState to Observations?
-public class MazeState {
+//REVIEW Observer to Observations?
+public class Observer {
   // the robot in the maze
   private IRobot robot;
   // Array of Directions
@@ -13,7 +13,7 @@ public class MazeState {
 
 
   // initialse Array of Directions
-  MazeState(IRobot robot, int[] directionArray) {
+  Observer(IRobot robot, int[] directionArray) {
     this.robot = robot;
     this.directionArray = directionArray;
   }

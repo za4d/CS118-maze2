@@ -59,14 +59,6 @@ public class ExplorerTest {
 
     @Test(timeout=10000)
     public void nonwallExitsTest() {
-// //TEMP
-//         int[] a = Directions.All.shuffledArray();
-//         for (int i=0; i<4; i++) {
-//         assertTrue(
-//         Arrays.toString(a),
-//         1 == 0);
-//     }
-// //TEMP
         //Add WALL NORTH
         setNorth(Maze.WALL);
         assertTrue(
@@ -177,6 +169,17 @@ public class ExplorerTest {
     }
 
 
+    @Test(timeout=10000)
+    public void crossroadsTest() {
+
+        setbeenbefore(IRobot.NORTH);
+        robot.setHeading(IRobot.NORTH);
+        assertTrue
+        ("Failed when checking North",
+        robot.look(IRobot.AHEAD) == IRobot.BEENBEFORE);
+
+    }
+
 
     //JUNCTION and CROSSROADS tested with custom Maze
 /*
@@ -259,39 +262,13 @@ public class ExplorerTest {
         this.maze.setCellType(1, 2, wallType);
     }
 
+    private void setbeenbefore(int heading) {
+      // setLocation(java.awt.Point)
+      robot.setHeading(heading);
+      robot.advance();
+      robot.face(IRobot.BEHIND);
+      robot.advance();
+      robot.setHeading(IRobot.EAST); //Default
+    }
 
-
-    // enum Directions {
-    //     All(true),
-    //     Forward(false);
-    //
-    //     private int[] directionArray;
-    //
-    //     // Creates Array with Directions
-    //     Directions(boolean all) {
-    //         if (all) {
-    //             this.directionArray = new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT, IRobot.BEHIND};
-    //         } else {
-    //             this.directionArray = new int[]{IRobot.AHEAD, IRobot.LEFT, IRobot.RIGHT};
-    //         }
-    //     }
-    //
-    //     // Returns SHUFFLED array of directions
-    //     public int[] shuffledArray() {
-    //         int[] array = this.directionArray;
-    //         for ( int i=array.length-1 ; i>0 ; i-- ) {
-    //             int r = (int)( Math.random() * array.length ); // r = random index in array
-    //             int e = array[r]; // e = element in random array position 'r'
-    //             array[r] = array[i]; // swap current element 'i' with random element at 'r'
-    //             array[i] = e;
-    //         }
-    //         return array;
-    //     }
-    //
-    //     // Returns Ordered array of directions
-    //     public int[] array() {
-    //         return this.directionArray;
-    //     }
-    //
-    // }
 }

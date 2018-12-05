@@ -15,6 +15,7 @@ and lead to dead ends are discarded and only the current path being searched is 
 // QUESTION MAX number of steps
 // NOTE Improve Depth First junction store efficiency
 // NOTE Labal Tasks
+
 public class Explorer2 implements IRobotController {
     // the robot in the maze
     private IRobot robot;

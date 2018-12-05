@@ -1,5 +1,9 @@
 
 > Task :run
+
+
+RobotImpl:
+
 There are 28 methods in the ROBOT class...
 
 public void uk.ac.warwick.dcs.maze.logic.RobotImpl.setMaze(uk.ac.warwick.dcs.maze.logic.Maze)
@@ -32,6 +36,7 @@ public final native void java.lang.Object.notify()
 public final native void java.lang.Object.notifyAll()
 
 
+Maze:
 
 There are 20 methods in the MAZE class...
 
@@ -57,6 +62,71 @@ public final native void java.lang.Object.notify()
 public final native void java.lang.Object.notifyAll()
 
 
+MazeApp:
+
+There are 11 methods in the MAZEAPP class...
+
+public static void uk.ac.warwick.dcs.maze.gui.MazeApp.printDebug(java.lang.Object,java.lang.String)
+public void uk.ac.warwick.dcs.maze.gui.MazeApp.notify(uk.ac.warwick.dcs.maze.logic.IEvent)
+public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
+public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
+public final void java.lang.Object.wait() throws java.lang.InterruptedException
+public boolean java.lang.Object.equals(java.lang.Object)
+public java.lang.String java.lang.Object.toString()
+public native int java.lang.Object.hashCode()
+public final native java.lang.Class java.lang.Object.getClass()
+public final native void java.lang.Object.notify()
+public final native void java.lang.Object.notifyAll()
+
+
+MazeLogic:
+
+There are 23 methods in the MAZELOGIC class...
+
+public uk.ac.warwick.dcs.maze.logic.ControllerPool uk.ac.warwick.dcs.maze.logic.MazeLogic.getControllerPool()
+public void uk.ac.warwick.dcs.maze.logic.MazeLogic.setMaze(uk.ac.warwick.dcs.maze.logic.Maze)
+public uk.ac.warwick.dcs.maze.logic.Maze uk.ac.warwick.dcs.maze.logic.MazeLogic.getMaze()
+public uk.ac.warwick.dcs.maze.logic.IRobot uk.ac.warwick.dcs.maze.logic.MazeLogic.getRobot()
+public void uk.ac.warwick.dcs.maze.logic.MazeLogic.startController()
+public void uk.ac.warwick.dcs.maze.logic.MazeLogic.resetController()
+public void uk.ac.warwick.dcs.maze.logic.MazeLogic.addMazeGenerator(uk.ac.warwick.dcs.maze.logic.IMazeGenerator)
+public void uk.ac.warwick.dcs.maze.logic.MazeLogic.removeMazeGenerator(uk.ac.warwick.dcs.maze.logic.IMazeGenerator)
+public uk.ac.warwick.dcs.maze.logic.IMazeGenerator[] uk.ac.warwick.dcs.maze.logic.MazeLogic.getMazeGenerators()
+public void uk.ac.warwick.dcs.maze.logic.MazeLogic.setCurrentGenerator(uk.ac.warwick.dcs.maze.logic.IMazeGenerator)
+public uk.ac.warwick.dcs.maze.logic.IMazeGenerator uk.ac.warwick.dcs.maze.logic.MazeLogic.getCurrentGenerator()
+public void uk.ac.warwick.dcs.maze.logic.MazeLogic.setCurrentController(uk.ac.warwick.dcs.maze.logic.IRobotController)
+public uk.ac.warwick.dcs.maze.logic.IRobotController uk.ac.warwick.dcs.maze.logic.MazeLogic.getCurrentController()
+public void uk.ac.warwick.dcs.maze.logic.MazeLogic.notify(uk.ac.warwick.dcs.maze.logic.IEvent)
+public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
+public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
+public final void java.lang.Object.wait() throws java.lang.InterruptedException
+public boolean java.lang.Object.equals(java.lang.Object)
+public java.lang.String java.lang.Object.toString()
+public native int java.lang.Object.hashCode()
+public final native java.lang.Class java.lang.Object.getClass()
+public final native void java.lang.Object.notify()
+public final native void java.lang.Object.notifyAll()
+
+
+PrimGenerator:
+
+There are 12 methods in the PRIMGENERATOR class...
+
+public java.lang.String uk.ac.warwick.dcs.maze.generators.PrimGenerator.getDescription()
+public uk.ac.warwick.dcs.maze.logic.Maze uk.ac.warwick.dcs.maze.generators.PrimGenerator.generateMaze()
+public javax.swing.JPanel uk.ac.warwick.dcs.maze.generators.PrimGenerator.getConfigurator()
+public final native void java.lang.Object.wait(long) throws java.lang.InterruptedException
+public final void java.lang.Object.wait(long,int) throws java.lang.InterruptedException
+public final void java.lang.Object.wait() throws java.lang.InterruptedException
+public boolean java.lang.Object.equals(java.lang.Object)
+public java.lang.String java.lang.Object.toString()
+public native int java.lang.Object.hashCode()
+public final native java.lang.Class java.lang.Object.getClass()
+public final native void java.lang.Object.notify()
+public final native void java.lang.Object.notifyAll()
+
+
+constants
 
 
 Headings:
@@ -72,10 +142,11 @@ IRobot.BEHIND -- 2002
 IRobot.LEFT -- 2003
 IRobot.CENTRE -- 2004
 
-SquareTypes:
+Tiles:
 IRobot.WALL -- 3000
 IRobot.PASSAGE -- 3001
 IRobot.BEENBEFORE -- 4000
 
-BUILD SUCCESSFUL in 19s
-2 actionable tasks: 1 executed, 1 up-to-date
+
+Done!
+

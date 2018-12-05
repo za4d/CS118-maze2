@@ -170,5 +170,13 @@ public class Info  implements IRobotController {
                 this.robot = robot;
         }
 
+        public static void flag() {
+          flag("///#///");
+        }
+
+        public static void flag(String str) {
+          System.out.print("\n"+str+"\n");
+        }
+
 
 }
