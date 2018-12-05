@@ -3,18 +3,26 @@ import java.awt.Point;
 import java.util.Stack;
 
 //REVIEW static?
+//TODO remove TEMP
 
-public class Recorder extends RobotData {
+public class Recorder3 extends Recorder {
+  //TEMP
+  public Stack<Junction> getList() {
+    return junctionList;
+  }
+  //TEMP
+
   // counter for number of junctions in stack
   private int juncCount;
   // Stack for storing list of juctions visited
-  private Stack<Junction> junctionList = new Stack<Junction>();
+  private Stack<Junction> junctionList;
 
 
   // initialises Recorder in the same way as RobotData
   Recorder() {
     super();
     this.juncCount = 0;
+    this.junctionList = new Stack<Junction>();
   }
 
   //Adds juction to the Array and increments the counter
@@ -32,14 +40,14 @@ public class Recorder extends RobotData {
 
   // Updates junction if its New
   public void update(Point location, int arrivalHeading) {
-    Junction junc = junctionList.peek();      Info.flag(Explorer.locationToString(junc.location)+" --- "+Explorer.locationToString(location)); //TEMP
+    Junction junc = junctionList.peek();
     // Search list for a juction in given location
-    if (junc.location.equals(location)) {      Info.flag("IF"); //TEMP
+    if (junc.location.equals(location)) {
       // Update the log to say report A juctions been REVISTED
       log =   "Revisted Junction " + junc.index
       + " - Arrival: " + Explorer.headingToString(junc.arrivalHeading)
       + " - " + Explorer.locationToString(junc.location);
-    } else {      Info.flag("else"); //TEMP
+    } else {
       addJunction(location, arrivalHeading);
       // Update the current log to say new junction added
       log =  "New Junction "   + this.junctionList.peek().index
@@ -49,13 +57,17 @@ public class Recorder extends RobotData {
   }
 
 
-  public void removeJunction() {
+  public Junction removeJunction() {
     Junction junc = junctionList.pop();
     juncCount--;
     // Reupdate the log to say Removed instead of revisited
     log =   "REMOVED Junction " + junc.index
     + " - Arrival: " + Explorer.headingToString(junc.arrivalHeading)
     + " - " + Explorer.locationToString(junc.location);
+
+    return junc;
   }
+
+  Store route
 
 }

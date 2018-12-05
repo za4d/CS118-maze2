@@ -1,18 +1,23 @@
 import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
+import java.util.Stack;//TEMP
+
+
 
 // TODO Implement tests for exploerer 2 and 3
-// NOTE Improve Depth First junction store efficiency
-// NOTE Labal Tasks
+// TODO Remove TEMP!
 
-/*
- * Task 2.2 (Depth First):
- * - Renamed Junction Store (RobotData) to be path store (Recorder)
- * - When backtracking through a junction, array counter moved to junction position
- * To improve my junction storge method, all junctions that: completly explored
- * and lead to dead ends are discarded and only the current path being searched is stored.
- */
+//QUESTION Single loop double loop
+//REVIEW Update after other Exploerers Cleanned
 
+ /*
+  * TASK 2.3 (Loopy):
+  *   - If Explorer mode returns direction that has a BEENBEFORE tile
+  *   - Turn around and backrack
+  *  When the robots path is about to form a loop
+  *  (), reverse direction.
+  *  In affect its like the loop is cut as the BEENBEFORE "blocks" the robot
+  */
 public class Explorer2 implements IRobotController {
   // the robot in the maze
   private IRobot robot;
@@ -80,22 +85,32 @@ public class Explorer2 implements IRobotController {
 
           // Then set direction according to mode.
           // if Exploring use exploreControl, else use backtrackControl
-          direction = (mode.name() == "Explore")? exploreControl() : backtrackControl();
+          direction = (mode.name() == "Explorer2")? exploreControl() : backtrackControl();
           break;
         }
 
       // Wait
       if (delay > 0)
-        robot.sleep(delay*2); // FIXME 
+        robot.sleep(delay*2); // FIXME
 
       // Log Explorer State
       // (Position, Mode, Directions and any reports from Junction data store)
-      logStep(direction);
+      // logStep(direction);//TODO uncomment
 
       // take a step
       robot.face(direction);
       robot.advance();
     }
+
+    //TEMP
+    Stack<Junction> list = robotData.getList();
+    while (!list.empty()) {
+    Junction junc = list.pop();
+    System.out.println("Junction " + junc.index
+    + " - Arrival: " + Explorer.headingToString(junc.arrivalHeading)
+    + " - " + Explorer.locationToString(junc.location));
+    }
+    //TEMP
   }
 
 
@@ -125,10 +140,10 @@ public class Explorer2 implements IRobotController {
     }
 
     //remove backtracked junction from list
-    robotData.removeJunction();
 
-    // Search get current junction from robotData
-    Junction junc = robotData.getJunction();
+
+    // 'Pops' top juction off stack
+    Junction junc = robotData.removeJunction();
 
     // Else exit junction from where you first entered it
     robot.setHeading(reverseHeading(junc.arrivalHeading));
@@ -183,7 +198,7 @@ public class Explorer2 implements IRobotController {
     return lookForwards.nextRandomExit();
   }
 
-
+  // REVIEW uneccesery
   public int nonwallExits() {
     return lookAllAround.countExits();
   }
@@ -211,16 +226,15 @@ public class Explorer2 implements IRobotController {
   /*
    * Static Methods
    */
-
   // Returns opposite heading
   public static int reverseHeading(int heading) {
     switch(heading) {
       case IRobot.NORTH:
         return IRobot.SOUTH;
+        case IRobot.SOUTH:
+        return IRobot.NORTH;
       case IRobot.EAST:
         return IRobot.WEST;
-      case IRobot.SOUTH:
-        return IRobot.NORTH;
       case IRobot.WEST:
         return IRobot.EAST;
       default:
@@ -261,11 +275,17 @@ public class Explorer2 implements IRobotController {
     }
   }
 
+  // Seperates new Run and Prints Log headings
+  public static void resetLog() {
+    System.out.println(
+      "\n\n\n\n\n "
+    + "Explorer Log:" + "\n "
+    + "POSTN" + "\t" + "EXPLR" + "\t" + "DIRC" + "\t" +"DATA LOG" + "\n");
+  }
 
   /*
    * Default Methods
    */
-
   // this method returns a description of this controller
   public String getDescription() {
     return "A controller which explores the maze in a structured way";
@@ -290,7 +310,7 @@ public class Explorer2 implements IRobotController {
   // stops the controller
   public void reset() {
     active = false;
-    System.out.print("\n\n\n\n\n ");
+    System.out.print("\n\n\n\n\n ");``
     System.out.print("Explorer Log:\n ");
     // print Log heading
     System.out.print("POS \tEXPLR \tDIR \t\n\n");
@@ -312,7 +332,5 @@ public class Explorer2 implements IRobotController {
                                                               IRobot.RIGHT });
 
   }
-
-
 
 }

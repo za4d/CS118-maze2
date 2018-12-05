@@ -2,7 +2,7 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 
 //REVIEW static?
-
+// REVIEW Make into recoder?
 public class RobotData {
   // stores string with the mode recent update to the database;
   public String log = "";
@@ -14,12 +14,6 @@ public class RobotData {
   // initialise RobotData object and set junction counter to 0
   RobotData() {
     this.juncCount = 0;
-
-    // Seperates Logs from different Runs
-    System.out.print("\n\n\n\n\n ");
-    System.out.print("Explorer Log:\n ");
-    // print Log heading
-    System.out.print("POS \tEXPLR \tDIR \t\n\n");
   }
 
   // // Reset junction Counter to 0
