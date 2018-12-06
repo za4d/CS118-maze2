@@ -76,7 +76,7 @@ public class GrandFinale implements IRobotController {
         case 3:// when at a junction or crossroads... (combined into 1 'crossroad' function)
         case 4:
           // if the robot knows the route
-          if (robotData.knowsRoute) {
+          if (robotData.isRouteKnown()) {
 
           }
 
@@ -109,7 +109,7 @@ public class GrandFinale implements IRobotController {
       // take a step
       robot.advance();
     }
-    roboData.storeRoute();
+    robotData.storeRoute();
   }
 
 

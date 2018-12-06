@@ -10,12 +10,16 @@ public class GrandRecorder extends Recorder3 {
   private Junction[] routeToFinish;
 
   // flags if robot recognises route
-  private boolean knowsRoute;
+  private boolean routeKnown;
 
   // initialises Recorder in the same way as RobotData
   GrandRecorder() {
     super();
-    this.knowsRoute = false;
+    this.routeKnown = false;
+  }
+
+  public boolean isRouteKnown() {
+    return this.routeKnown;
   }
 
   public Junction[] getRoute() {
@@ -27,20 +31,10 @@ public class GrandRecorder extends Recorder3 {
     this.routeToFinish = new Junction[super.getJuncCount()];
     Stack<Junction> list = super.getJunctionList();
 
-    for (int i = routeToFinish - 1 ; i>=0; i--)
+    for (int i = routeToFinish.length - 1 ; i>=0; i--) {
       this.routeToFinish[i] = list.pop();
     }
-    this.knowsRoute = true
+    this.routeKnown = true;
   }
-
-
-
-  public Stack<Junction> getJunctionList() {
-    return junctionList;
-  }
-
-
-
-
 
 }
