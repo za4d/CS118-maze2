@@ -5,25 +5,34 @@ import java.awt.Point;
 // REVIEW Descibe how i recorded the juntions
 // REVIEW Why is it PUBLIC
 
-//
+//TODO GROUP VARIABLE!!!
+
 public class Junction {
   // CONSTANTS:
-  // index number of junction
-  public final int index;
-  // Coordinate of junction in a point object
-  public final Point location;
-  // initial heading when robot arrived at junction
-  public final int arrivalHeading;
-
+  public final int index; // index number of junction
+  public final Point location; // Coordinate of junction in a point object
+  public final int arrivalHeading; // initial heading when robot arrived at junction
   // VARIABLE:
-  // initial heading when robot LAST exited at junction
-  private int departureHeading = IRobot.CENTRE;
+  public int departureHeading; // initial heading when robot LAST exited at junction
 
   //Constructs a Junction given a Point and Heading
   Junction(int index, int arrivalHeading, Point location) {
     this.index = index;
     this.arrivalHeading = arrivalHeading;
     this.location = location;
+  }
+
+
+  public void setDepartureHeading(int departureHeading) {
+    this.departureHeading = departureHeading;
+  }
+
+
+  public String toString() {
+    return "Junction " + this.index
+           + " - Arrival: " + Explorer.headingToString(this.arrivalHeading)
+           + " - Departure: " + Explorer.headingToString(this.departureHeading)
+           + " - " + Explorer.locationToString(this.location);
   }
 
 }

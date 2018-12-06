@@ -6,7 +6,7 @@ import java.util.Stack;
 //TODO remove TEMP
 
 public class Recorder3 extends Recorder {
-
+  private boolean updateDepartureFlag = false;
   // counter for number of junctions in stack
   private int juncCount;
   // Stack for storing list of juctions visited
@@ -45,21 +45,33 @@ public class Recorder3 extends Recorder {
 
   // Updates junction if its New
   public void update(Point location, int arrivalHeading) {
-    Junction junc = junctionList.peek();
-    // Search list for a juction in given location
+    this.updateDepartureFlag = true;
+
+    if (junctionList.empty()) { // add start `junction`
+      addJunction(location, arrivalHeading);
+      updateDeparture(arrivalHeading);
+      log =  "Start of Maze " + junctionList.peek().toString();
+      return;
+    }
+
+    Junction  junc = junctionList.peek();
+
     if (junc.location.equals(location)) {
-      // Update the log to say report A juctions been REVISTED
-      log =   "Revisted Junction " + junc.index
-      + " - Arrival: " + Explorer.headingToString(junc.arrivalHeading)
-      + " - " + Explorer.locationToString(junc.location);
+      log =   "Revisted "; // Update the log to say report A juctions been REVISTED
 
     } else {
-      addJunction(location, arrivalHeading);
+      addJunction(location, arrivalHeading); //Add new Junction
+      log =  "New ";// Update the current log to say new junction added
+    }
+  }
 
-      // Update the current log to say new junction added
-      log =  "New Junction "   + this.junctionList.peek().index
-      + " - Arrival: "   + Explorer.headingToString(junctionList.peek().arrivalHeading)
-      + " - "      + Explorer.locationToString(junctionList.peek().location);
+  public void updateDeparture(int departureHeading) {
+    if (updateDepartureFlag){
+      this.updateDepartureFlag = false;
+      Junction junc = junctionList.pop();
+      junc.setDepartureHeading(departureHeading);
+      junctionList.push(junc);
+      log += junctionList.peek().toString();
     }
   }
 
@@ -68,9 +80,7 @@ public class Recorder3 extends Recorder {
     Junction junc = junctionList.pop();
     juncCount--;
     // Reupdate the log to say Removed instead of revisited
-    log =   "REMOVED Junction " + junc.index
-    + " - Arrival: " + Explorer.headingToString(junc.arrivalHeading)
-    + " - " + Explorer.locationToString(junc.location);
+    log =   "REMOVED " + junc.toString();
     return junc;
   }
 

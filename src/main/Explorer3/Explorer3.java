@@ -29,11 +29,11 @@ public class Explorer3 implements IRobotController {
 
   // Recorder (RobotData) creates and stores
   // the info on the junctions the robot encounters
-  private Recorder3 robotData;
+  public Recorder3 robotData;
 
   // Observer concerns current state of the maze in the given directions
-  private Observer lookAllAround; // (All directions)
-  private Observer lookForwards; // (All directions EXCLUDING BEHIND)
+  public Observer lookAllAround; // (All directions)
+  public Observer lookForwards; // (All directions EXCLUDING BEHIND)
 
   // Mode Constants
   private Mode mode;
@@ -63,7 +63,9 @@ public class Explorer3 implements IRobotController {
 
     // adds starting point as as first junction (direction is reverse)
     robot.face(direction);
-    robotData.addJunction(robot.getLocation(), reverseHeading(robot.getHeading()));
+    robotData.update(robot.getLocation(), robot.getHeading());
+    logStep(direction);
+    robot.advance();
 
     // Until the robot reaches the Goal ...
     while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
@@ -82,13 +84,15 @@ public class Explorer3 implements IRobotController {
           robotData.update(robot.getLocation(), robot.getHeading());
 
           // Then set direction according to mode.
-          // if Exploring use exploreControl, else use backtrackControl
           direction = (mode.name() == "Explore")? exploreControl() : backtrackControl();
+
+
           break;
         }
 
-
         robot.face(direction);
+
+        robotData.updateDeparture(robot.getHeading());//Updates when at new/revisited junction
 
         if ((mode.name() == "Explore") && (robot.look(IRobot.AHEAD) == IRobot.BEENBEFORE)){
           mode = Mode.BackTrack;
@@ -104,7 +108,9 @@ public class Explorer3 implements IRobotController {
       logStep(direction);
 
       // take a step
-      robot.advance();
+      if (robot.look(IRobot.AHEAD) != IRobot.WALL) {
+        robot.advance();
+      }
     }
 
   }
@@ -311,6 +317,13 @@ public class Explorer3 implements IRobotController {
     System.out.print("POS \tEXPLR \tDIR \t\n\n");
   }
 
+  public IRobot getRobot() {
+    return this.robot;
+  }
+
+  public int getRobotHeading() {
+    return this.robot.getHeading();
+  }
 
 
   // sets the reference to the robot

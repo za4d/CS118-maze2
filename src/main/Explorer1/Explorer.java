@@ -38,6 +38,7 @@ public class Explorer implements IRobotController {
   /*
    * This method is called when the "start" button is clicked
    */
+   //TODO BREAK UP CONTINUOUS START
   public void start() {
     this.active = true;
 

@@ -107,7 +107,7 @@ public class Info  implements IRobotController {
 
                 Class robotC = new RobotImpl().getClass();
                 Method[] m = robotC.getMethods();
-                System.out.println("There are "+m.length+" methods in the ROBOT class...\n");
+                System.out.println("There are "+m.length+" methods in the RobotImpl class...\n");
                 for ( int i = 0 ; i < m.length ; i++ ) {
                         System.out.println(m[i]);
                 }
