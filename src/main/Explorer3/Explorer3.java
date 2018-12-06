@@ -2,18 +2,21 @@ import uk.ac.warwick.dcs.maze.logic.*;
 import java.awt.Point;
 import java.util.Stack;//TEMP
 
-// TODO Implement tests for exploerer 2 and 3
+//QUESTION Single loop double loop
+//REVIEW Update after other Exploerers Clea`ned
+/*
+    TASK 2.3 (Loopy):
+     - If Explorer mode returns direction that has a BEENBEFORE tile
+     - Turn around and backrack
+    When the robots path is about to form a loop
+    (), reverse direction.
+    In affect its like the loop is cut as the BEENBEFORE "blocks" the robot
+*/
+
+// TODO LOOK around method to group all the loops in dead end corridor ...
+// QUESTION MAX number of steps
 // NOTE Improve Depth First junction store efficiency
 // NOTE Labal Tasks
-// TODO Remove TEMP!
-/*
- * Task 2.2 (Depth First):
- * - Extended the Array type Junction Store (RobotData) to be a Stack type path store (Recorder)
- * - When in backtracking mode and `exausted junction` through a junction, array counter moved to junction position
- * To improve my junction storge method, all junctions that: completly explored
- * and lead to dead ends are discarded and only the current path being searched is stored.
- */
-
 public class Explorer3 implements IRobotController {
   // the robot in the maze
   private IRobot robot;
@@ -26,7 +29,7 @@ public class Explorer3 implements IRobotController {
 
   // Recorder (RobotData) creates and stores
   // the info on the junctions the robot encounters
-  private Recorder robotData;
+  private Recorder3 robotData;
 
   // Observer concerns current state of the maze in the given directions
   private Observer lookAllAround; // (All directions)
@@ -52,7 +55,7 @@ public class Explorer3 implements IRobotController {
     // - Reset Junction Array to 0,
     // - Clears terminal and print logger headings
     if (robot.getRuns() == 0) {
-      this.robotData = new Recorder();
+      this.robotData = new Recorder3();
     }
 
     // direction varible the robot will move toward in a given step
@@ -66,10 +69,9 @@ public class Explorer3 implements IRobotController {
     while(!robot.getLocation().equals(robot.getTargetLocation()) && active) {
 
       // Count number of Non Wall tiles (Exits)
-      System.out.print(lookAllAround.countExits());//TEMP
       switch (lookAllAround.countExits()) {
         case 1:// when at a dead-end...
-          direction = deadEnd();  System.out.print(" * ");//TEMP
+          direction = deadEnd();
           break;
         case 2:// when in a coridoor...
           direction = corridor();
@@ -85,13 +87,14 @@ public class Explorer3 implements IRobotController {
           break;
         }
 
+
         robot.face(direction);
 
         if ((mode.name() == "Explore") && (robot.look(IRobot.AHEAD) == IRobot.BEENBEFORE)){
           mode = Mode.BackTrack;
           robot.face(IRobot.BEHIND);
         }
-        System.out.print(directionToString(direction));//TEMP
+
       // Wait
       if (delay > 0)
         robot.sleep(delay);
@@ -104,15 +107,6 @@ public class Explorer3 implements IRobotController {
       robot.advance();
     }
 
-    //TEMP
-    Stack<Junction> list = robotData.getList();
-    while (!list.empty()) {
-    Junction junc = list.pop();
-    System.out.println("Junction " + junc.index
-    + " - Arrival: " + Explorer.headingToString(junc.arrivalHeading)
-    + " - " + Explorer.locationToString(junc.location));
-    }
-    //TEMP
   }
 
 

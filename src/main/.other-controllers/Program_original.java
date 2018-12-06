@@ -21,12 +21,4 @@ public class Program {
         // run the maze
 		new MazeApp(logic);
     }
-
-    private static void runNormal() {
-
-    }
-
-    private static void runTrainer() {
-
-    }
 }
